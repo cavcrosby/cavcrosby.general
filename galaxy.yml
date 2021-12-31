@@ -1,0 +1,26 @@
+# https://docs.ansible.com/ansible/latest/dev_guide/collections_galaxy_meta.html
+namespace: cavcrosby
+name: general
+version: 1.0.0
+readme: README.md
+authors:
+  - Conner Crosby <conner@cavcrosby.tech>
+
+description: A personal collection of reusable Ansible units
+license_file: LICENSE
+dependencies:
+  "community.general": ">=4.1.0"
+
+repository: https://github.com/cavcrosby/cavcrosby.general
+homepage: https://github.com/cavcrosby/cavcrosby.general
+issues: https://github.com/cavcrosby/cavcrosby.general/issues
+
+# A list of file glob-like patterns used to filter any files or directories that should not be included in the build
+# artifact. A pattern is matched from the relative path of the file or directory of the collection directory. This
+# uses 'fnmatch' to match the files or directories. Some directories and files like 'galaxy.yml', '*.pyc', '*.retry',
+# and '.git' are always filtered
+build_ignore:
+  - ".python-version"
+  - ".gitignore"
+  - "Makefile"
+

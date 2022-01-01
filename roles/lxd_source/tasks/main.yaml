@@ -70,7 +70,7 @@
     go_extracted_tarball_path: "{{ lxd_go_extracted_tarball_path }}"
     go_sha256_checksum: "{{ lxd_go_sha256_checksum }}"
 
-- name: Append PATH with Go binary location for root
+- name: Append PATH with the Go binary location for root
   ansible.builtin.import_role:
     name: common
     tasks_from: managed_lineinfile
@@ -78,7 +78,7 @@
     path: "{{ _roots_home }}/.bashrc"
     regexp: '^export PATH="(.+:|)?{{ lxd_go_extracted_tarball_path }}/go/bin(:.+|)"'
     line: 'export PATH="${PATH}:{{ lxd_go_extracted_tarball_path }}/go/bin"'
-    line_identifier: PATH that includes Go binary
+    line_identifier: PATH that includes the Go binary
   become: yes
 
 - name: Set USE_LXC_BRIDGE to false

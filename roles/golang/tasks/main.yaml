@@ -1,0 +1,23 @@
+---
+- name: Create Go's download directory
+  ansible.builtin.file:
+    path: "{{ _go_download_path }}"
+    state: directory
+    mode: "700"
+  become: yes
+  register: creating_go_download_dir_check
+  changed_when: creating_go_download_dir_check.state == "absent"
+
+- name: Download Go
+  ansible.builtin.get_url:
+    url: "https://dl.google.com/go/{{ _go_tarball }}"
+    dest: "{{ _go_download_path }}"
+    checksum: "sha256:{{ go_sha256_checksum }}"
+  become: yes
+
+- name: Extract Go
+  ansible.builtin.unarchive:
+    src: "{{ _go_download_path }}/{{ _go_tarball }}"
+    dest: "{{ _go_extracted_tarball_path }}"
+    remote_src: yes
+  become: yes

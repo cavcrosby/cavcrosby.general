@@ -1,0 +1,11 @@
+galaxy_info:
+  role_name: golang
+  author: Conner Crosby
+  description: Installs golang (Go) on the running system
+  license: BSD-3-Clause
+  min_ansible_version: 2.12.1
+
+  platforms:
+  - name: Debian
+    versions:
+    - bullseye

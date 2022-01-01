@@ -1,0 +1,14 @@
+galaxy_info:
+  role_name: common
+  author: Conner Crosby
+  description: Contains common units used throughout my projects
+  license: BSD-3-Clause
+  min_ansible_version: 2.12
+
+  # TODO(cavcrosby): Debian bullseye is listed as the sole platform but this is only
+  # because I have not tested this on any other platforms. Eventually look into
+  # testing this role on other platforms.
+  platforms:
+  - name: Debian
+    versions:
+    - bullseye

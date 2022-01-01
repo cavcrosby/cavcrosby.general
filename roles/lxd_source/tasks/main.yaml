@@ -40,7 +40,6 @@
       - autoconf
       - dnsmasq-base
       - git
-      - golang
       - libacl1-dev
       - libcap-dev
       - liblxc1
@@ -60,6 +59,26 @@
       - xz-utils
       - ebtables
     state: present
+  become: yes
+
+- name: Install Golang that is specific for LXD
+  ansible.builtin.import_role:
+    name: golang
+  vars:
+    go_version: "{{ lxd_go_version }}"
+    go_arch: "{{ lxd_go_arch }}"
+    go_extracted_tarball_path: "{{ lxd_go_extracted_tarball_path }}"
+    go_sha256_checksum: "{{ lxd_go_sha256_checksum }}"
+
+- name: Append PATH with Go binary location for root
+  ansible.builtin.import_role:
+    name: common
+    tasks_from: managed_lineinfile
+  vars:
+    path: "{{ _roots_home }}/.bashrc"
+    regexp: '^export PATH="(.+:|)?{{ lxd_go_extracted_tarball_path }}/go/bin(:.+|)"'
+    line: 'export PATH="${PATH}:{{ lxd_go_extracted_tarball_path }}/go/bin"'
+    line_identifier: PATH that includes Go binary
   become: yes
 
 - name: Set USE_LXC_BRIDGE to false
@@ -95,6 +114,8 @@
   failed_when: "'error while loading shared libraries:' in running_lxd_version.stderr"
   changed_when: false
 
+# Reinstalling LXD does not explicitly restart the custom service for it but
+# affectedly this appears to occur anyways (at least when running lxd --version).
 - name: Check if LXD is installed
   ansible.builtin.shell: |
     find "{{ lxd_go_path }}/bin" \( -name 'lxd' \) \
@@ -102,6 +123,7 @@
   become: yes
   register: lxd_check
   changed_when: lxd_check.stdout | length == 0
+                or lxd_src_path | length != 0
                 or running_lxd_version.stdout != lxd_release_version 
   notify:
     - Grab a LXD release tarball, and extract the archive
@@ -135,7 +157,7 @@
       PROGRAM_NAME="$(basename "$0")"
       readonly PROGRAM_NAME
       readonly ROOT_UID=0
-      readonly LD_LIBRARY_PATH="{{ _lxd_ld_library_path }}"
+      readonly LD_LIBRARY_PATH="{{ lxd_ld_library_path }}"
       export LD_LIBRARY_PATH
 
       if [ "$(id --user)" != "${ROOT_UID}" ]; then

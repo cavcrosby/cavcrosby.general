@@ -4,6 +4,33 @@ lxd_access_group: sudo
 lxd_extracted_tarball_path: /usr/local/src
 lxd_trust_password: "Passw0rd!"
 
+# Variables related to LXD's Go installation.
+lxd_go_version: 1.17.5
+lxd_go_arch: amd64
+lxd_go_extracted_tarball_path: /usr/local/share
+lxd_go_sha256_checksum: "bd78114b0d441b029c8fe0341f4910370925a4d270a6a590668840675b0c653e"
+
+# Setting this variable (to something other than an empty string) assumes the
+# source code for LXD will be located at the value set by this variable.
+# Additionally, setting this variable will overwrite the need for Ansible to grab
+# a tarball and instead will build LXD based on the source code designated by the
+# variable. If set, LXD will be built each time this role is invoked.
+lxd_src_path: ""
+
+# These are tool flags for when building LXD. If a custom source path is used to
+# build LXD over a release tarball, then these values will need to be set
+# different from the default. While its possible to combine all possible
+# dependency paths together, I feels its best that the number of directories for
+# dependencies be limited or else conflicts could occur.
+lxd_cgo_cflags: >
+  -I{{ lxd_extracted_tarball_path }}/lxd-{{ lxd_release_version }}/vendor/raft/include/
+  -I{{ lxd_extracted_tarball_path }}/lxd-{{ lxd_release_version }}/vendor/dqlite/include/
+lxd_cgo_ldflags: >
+  -L{{ lxd_extracted_tarball_path }}/lxd-{{ lxd_release_version }}/vendor/raft/.libs/
+  -L{{ lxd_extracted_tarball_path }}/lxd-{{ lxd_release_version }}/vendor/dqlite/.libs/
+lxd_cgo_ldflags_allow: "(-Wl,-wrap,pthread_create)|(-Wl,-z,now)"
+lxd_ld_library_path: "{{ lxd_extracted_tarball_path }}/lxd-{{ lxd_release_version }}/vendor/raft/.libs/:{{ lxd_extracted_tarball_path }}/lxd-{{ lxd_release_version }}/vendor/dqlite/.libs/" # noqa 204
+
 # Bridge interface used by LXD to communicate with LXD containers.
 lxd_bridge_device_name: lxdbr0
 
@@ -58,14 +85,7 @@ _default_lxc_bridge: lxcbr0
 # serve as the prefix in said tarball name.
 _lxd_extracted_dir: lxd-{{ lxd_release_version }}
 
+_roots_home: /root
 _lxd_data_dir: /run/ansible/lxd_source
 _lxd_remote_preseed_path: "{{ _lxd_data_dir }}/lxd.yaml"
 _running_lxd_remote_preseed_path: "{{ _lxd_data_dir }}/running_lxd.yaml"
-_lxd_cgo_cflags: >
-  -I{{ lxd_extracted_tarball_path }}/lxd-{{ lxd_release_version }}/vendor/raft/include/
-  -I{{ lxd_extracted_tarball_path }}/lxd-{{ lxd_release_version }}/vendor/dqlite/include/
-_lxd_cgo_ldflags: >
-  -L{{ lxd_extracted_tarball_path }}/lxd-{{ lxd_release_version }}/vendor/raft/.libs/
-  -L{{ lxd_extracted_tarball_path }}/lxd-{{ lxd_release_version }}/vendor/dqlite/.libs/
-_lxd_cgo_ldflags_allow: "(-Wl,-wrap,pthread_create)|(-Wl,-z,now)"
-_lxd_ld_library_path: "{{ lxd_extracted_tarball_path }}/lxd-{{ lxd_release_version }}/vendor/raft/.libs/:{{ lxd_extracted_tarball_path }}/lxd-{{ lxd_release_version }}/vendor/dqlite/.libs/" # noqa 204

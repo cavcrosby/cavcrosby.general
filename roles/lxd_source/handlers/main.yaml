@@ -5,21 +5,24 @@
     dest: "{{ lxd_extracted_tarball_path }}"
     remote_src: yes
   become: yes
+  when: lxd_src_path | length == 0
 
 - name: Build the LXD libraries
   ansible.builtin.shell:
-    chdir: "{{ lxd_extracted_tarball_path }}/{{ _lxd_extracted_dir }}"
-    cmd: make deps
+    chdir: "{{ lxd_src_path | default(lxd_extracted_tarball_path + '/' + _lxd_extracted_dir, true) }}"
+    cmd: . {{ _roots_home }}/.bashrc && make deps
   become: yes
+  environment:
+    - GOPATH: "{{ lxd_go_path }}"
 
 - name: Build LXD
   ansible.builtin.shell:
-    chdir: "{{ lxd_extracted_tarball_path }}/{{ _lxd_extracted_dir }}"
-    cmd: make
+    chdir: "{{ lxd_src_path | default(lxd_extracted_tarball_path + '/' + _lxd_extracted_dir, true) }}"
+    cmd: . {{ _roots_home }}/.bashrc && make
   become: yes
   environment:
-    - CGO_CFLAGS: "{{ _lxd_cgo_cflags }}"
-    - CGO_LDFLAGS: "{{ _lxd_cgo_ldflags }}"
-    - CGO_LDFLAGS_ALLOW: "{{ _lxd_cgo_ldflags_allow }}"
-    - LD_LIBRARY_PATH: "{{ _lxd_ld_library_path }}"
+    - CGO_CFLAGS: "{{ lxd_cgo_cflags }}"
+    - CGO_LDFLAGS: "{{ lxd_cgo_ldflags }}"
+    - CGO_LDFLAGS_ALLOW: "{{ lxd_cgo_ldflags_allow }}"
+    - LD_LIBRARY_PATH: "{{ lxd_ld_library_path }}"
     - GOPATH: "{{ lxd_go_path }}"

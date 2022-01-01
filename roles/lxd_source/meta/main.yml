@@ -1,7 +1,7 @@
 galaxy_info:
   role_name: lxd_source
   author: Conner Crosby
-  description: Installs LXD from a source tarball
+  description: Installs LXD from source
   license: BSD-3-Clause
   min_ansible_version: 2.12.1
 

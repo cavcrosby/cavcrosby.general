@@ -1,2 +1,4 @@
 ---
+# TODO(cavcrosby): determine why the ansible version is quoted vs those in the
+# meta folder for roles.
 requires_ansible: ">=2.12.1"

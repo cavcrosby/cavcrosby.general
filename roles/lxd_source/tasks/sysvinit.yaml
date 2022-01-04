@@ -1,0 +1,99 @@
+---
+# This list is specific to Debian/Devuan at the moment. Can be expanded to a
+# vars directory to install dependencies based on the distro.
+- name: Install the SysVinit dependencies
+  ansible.builtin.apt:
+    name:
+      - lsb-base
+    state: present
+  become: yes
+
+# This list is specific to Debian/Devuan at the moment. The 'start-stop-daemon'
+# binary is specific to the dpkg package. The 'init-functions' file (from
+# lsb-base) may also be Debian specific.
+- name: Setup the SysVinit environment
+  block:
+    - name: Create the environment variables file for the LXD init script
+      ansible.builtin.copy:
+        dest: "{{ lxd_initscript_vars_path }}"
+        mode: "644"
+        content: |
+          #
+          #
+          # ANSIBLE MANAGED
+
+          # By default, the LXD daemon will be detached to the background by the init
+          # script. Set this variable to '0' if the daemon should remain in the foreground.
+          DETACH=1
+      become: yes
+
+    # This init script is specific to Debian/Devuan at the moment. Debian also has
+    # guidance for the usage and creation of init scripts, for reference:
+    # https://www.debian.org/doc/debian-policy/ch-opersys.html#starting-system-services
+    #
+    # Inspired by the cron/rsync init scripts.
+    #
+    # Trying to solely start LXD by appending an '&' to the daemon path turned out
+    # to be a nightmare. Somehow Ansible (regardless if sysvinit or service module is
+    # used) would start the LXD daemon but shortly after starting, the daemon would
+    # "crash". The daemon did not report anything to be of an issue, and starting the
+    # daemon manually afterwards would work (e.g. continue running and not crashing).
+    - name: Create a LXD init script
+      ansible.builtin.copy:
+        dest: /etc/init.d/lxd
+        mode: "755"
+        content: |
+          #!/bin/sh
+          #
+          # ANSIBLE MANAGED
+          # 
+          ### BEGIN INIT INFO
+          # Provides:          lxd
+          # Required-Start:    $local_fs networking
+          # Required-Stop:     $local_fs networking
+          # Default-Start:     3 5
+          # Default-Stop:      0 1 6
+          # Description:       LXD (Linux Container Daemon) init script.
+          ### END INIT INFO
+
+          readonly NAME=lxd
+          readonly DAEMON="{{ lxd_go_path }}/bin/lxd"
+          readonly LD_LIBRARY_PATH="{{ lxd_ld_library_path }}"
+          export LD_LIBRARY_PATH
+
+          . "{{ lxd_initscript_vars_path }}"
+          . "/lib/lsb/init-functions"
+
+          case "$1" in
+              start)                        log_daemon_msg "Starting the Linux Container Daemon" "${NAME}"
+                                            start_stop_daemon_args="--quiet --start --exec "${DAEMON}" --oknodo"
+                                            if [ "${DETACH}" -ne 0 ]; then
+                                                start_stop_daemon_args="${start_stop_daemon_args} --background"
+                                            fi
+                                            start-stop-daemon ${start_stop_daemon_args} -- --group {{ lxd_access_group }}
+                                            log_end_msg $?
+                                            ;;
+              stop)                         log_daemon_msg "Stopping the Linux Container Daemon" "${NAME}"
+                                            if pidof -q "${NAME}"; then
+                                                ${DAEMON} shutdown || killproc "${DAEMON}"
+                                            fi
+                                            log_end_msg $?
+                                            ;;
+              restart|reload|force-reload)  log_daemon_msg "Restarting the Linux Container Daemon" "${NAME}.\n"
+                                            $0 stop
+                                            $0 start
+                                            # do not append log_end_msg here, otherwise a period may exist solely on a newline
+                                            ;;
+              status)                       status_of_proc "${DAEMON}" "${NAME}" || exit $?
+                                            ;;
+              *)                            echo "Usage: $0 {start|stop|status|restart|reload|force-reload}"
+                                            exit 1
+                                            ;;
+          esac
+
+          exit 0
+      become: yes
+      notify:
+        - Save the current iptables rules
+  vars:
+    lxd_initscript_vars_path: /etc/default/lxd

@@ -1,4 +1,4 @@
-include defaults.mk
+include base.mk
 
 # recursive variables
 

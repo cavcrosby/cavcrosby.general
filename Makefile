@@ -18,7 +18,6 @@ VIRTUALENV_PYTHON_VERSION = 3.9.5
 
 include ansible.mk
 ANSISRC = $(shell find . \( -type f \) \
-	-and \( -name '*.yaml' \) \
 	-or \( -name '*.yml' \) \
 	-and ! \( -name 'galaxy.yml' \) \
 )
@@ -47,7 +46,7 @@ ${HELP}:
 >	@echo '  ${COLLECTION}          - build the collection'
 >	@echo '  ${GALAXY_YML}          - generate the collection metadata'
 >	@echo '  ${PUBLISH}             - publish a collection build'
->	@echo '  ${ANSILINT}            - lints the Ansible configuration code (yaml/yml)'
+>	@echo '  ${ANSILINT}            - lints the Ansible configuration code (yml)'
 >	@echo '  ${CLEAN}               - removes files generated from other targets'
 >	@echo 'Common make configurations (e.g. make [config]=1 [targets]):'
 >	@echo '  ANSIBLE_GALAXY_TOKEN       - represents the Ansible Galaxy API key'

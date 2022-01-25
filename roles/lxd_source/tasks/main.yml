@@ -218,11 +218,11 @@
   register: init_pid_exe_inode
 
 - name: Import tasks related to the Systemd LXD setup
-  ansible.builtin.import_tasks: systemd.yaml
+  ansible.builtin.import_tasks: systemd.yml
   when: init_pid_exe_inode.stat.lnk_source == "/usr/lib/systemd/systemd"
 
 - name: Import tasks related to the SysVinit LXD setup
-  ansible.builtin.import_tasks: sysvinit.yaml
+  ansible.builtin.import_tasks: sysvinit.yml
   when: init_pid_exe_inode.stat.lnk_source == "/sbin/init"
 
 - name: Enable the LXD service

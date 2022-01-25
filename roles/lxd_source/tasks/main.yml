@@ -260,9 +260,11 @@
 # This was done as it doesn't seem possible to interject a final newline in the
 # preseed variable.
 - name: Create the running LXD's preseed
-  ansible.builtin.shell: |
-    set -o pipefail
-    lxd init --dump | perl -pi -e 'chomp if eof' > "{{ _running_lxd_remote_preseed_path }}"
+  ansible.builtin.shell:
+    executable: /bin/bash
+    cmd: |
+      set -o pipefail
+      lxd init --dump | perl -pi -e 'chomp if eof' > "{{ _running_lxd_remote_preseed_path }}"
   become: yes
   register: create_running_lxd_preseed_check
   changed_when: create_running_lxd_preseed_check.rc != 0

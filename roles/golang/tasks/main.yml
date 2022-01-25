@@ -2,7 +2,6 @@
 # TODO(cavcrosby): changed_when is always false because the state will never (at
 # least, as written) be absent. I would assume the file module already accounts if
 # the file already exists or not.
-# TODO(cavcrosby): change all yaml extensions to yml for consistency.
 # DISCUSS(cavcrosby): look into deciding whether or not to check if Go is
 # installed first.
 - name: Create Go's download directory

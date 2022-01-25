@@ -153,3 +153,4 @@ cython_debug/
 
 # repo specific
 galaxy.yml
+cavcrosby-general-*.tar.gz

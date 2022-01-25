@@ -1,0 +1,40 @@
+---
+- name: Create the container's Docker network
+  community.docker.docker_network:
+    name: "{{ container_network }}"
+    ipam_config:
+      - subnet: "{{ container_bridge_ipv4_subnet }}"
+        iprange: "{{ container_bridge_ipv4_subnet }}"
+        gateway: "{{ container_bridge_ipv4_addr }}"
+    driver_options:
+      com.docker.network.bridge.name: "{{ container_network }}1"
+  notify:
+    - Restart Docker
+  when: create_container_network
+
+- name: Deploy a jenkins-{{ image_to_deploy }} container
+  community.docker.docker_container:
+    name: "{{ container_name }}"
+    image: cavcrosby/jenkins-{{ image_to_deploy }}:{{ image_tag }}
+    published_ports:
+      - "{{ jenkins_port_mapping }}"
+      - "{{ jenkins_agents_port_mapping }}"
+    cpus: "{{ container_cpus }}"
+    memory: "{{ container_memory }}"
+    volumes: "{{ container_volume }}"
+    networks:
+      - name: "{{ container_network }}"
+        ipv4_address: "{{ container_ipv4_address }}"
+    env:
+      JENKINS_URL: "{{ jenkins_url }}"
+      JENKINS_ADMIN_ID: "{{ jenkins_admin_id }}"
+      JENKINS_ADMIN_PASSWORD: "{{ jenkins_admin_password }}"
+      JENKINS_ADMIN_FULLNAME: "{{ jenkins_admin_fullname }}"
+      JENKINS_ADMIN_EMAIL: "{{ jenkins_admin_email }}"
+      JENKINS_ADMIN_EMAIL_SECRET: "{{ jenkins_admin_email_secret }}"
+      SMTP_SERVER_ADDR: "{{ smtp_server_addr }}"
+      JENKINS_GITHUB_CREDENTIAL_ID: "{{ jenkins_github_credential_id }}"
+      JENKINS_GITHUB_CREDENTIAL_USERNAME: "{{ jenkins_github_credential_username }}"
+      JENKINS_GITHUB_CREDENTIAL_SECRET: "{{ jenkins_github_credential_secret }}"
+  no_log: true
+  when: image_to_deploy == "base"

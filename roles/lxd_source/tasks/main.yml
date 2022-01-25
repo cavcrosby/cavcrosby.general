@@ -108,7 +108,7 @@
 # When installing a new version of LXD, the wrapper must be used to get the
 # current LXD's LD_LIBRARY_PATH.
 - name: Get the running LXD version
-  ansible.builtin.shell: lxd --version
+  ansible.builtin.command: lxd --version
   become: yes
   register: running_lxd_version
   failed_when: "'error while loading shared libraries:' in running_lxd_version.stderr"
@@ -261,6 +261,7 @@
 # preseed variable.
 - name: Create the running LXD's preseed
   ansible.builtin.shell: |
+    set -o pipefail
     lxd init --dump | perl -pi -e 'chomp if eof' > "{{ _running_lxd_remote_preseed_path }}"
   become: yes
   register: create_running_lxd_preseed_check

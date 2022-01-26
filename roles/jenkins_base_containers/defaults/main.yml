@@ -12,7 +12,7 @@ container_volume: jenkins_home:/var/jenkins_home
 # trying to use the name (or a numerical result out of range error). For
 # reference:
 # https://stackoverflow.com/questions/53449304/what-can-be-the-max-length-of-a-docker-compose-network-name
-container_network: jbc
+container_network: jbc1
 container_bridge_ipv4_addr: 192.168.147.1
 container_bridge_ipv4_subnet: 192.168.147.0/24
 container_ipv4_address: 192.168.147.2

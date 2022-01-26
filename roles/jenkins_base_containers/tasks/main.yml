@@ -7,7 +7,7 @@
         iprange: "{{ container_bridge_ipv4_subnet }}"
         gateway: "{{ container_bridge_ipv4_addr }}"
     driver_options:
-      com.docker.network.bridge.name: "{{ container_network }}1"
+      com.docker.network.bridge.name: "{{ container_network }}"
   notify:
     - Restart Docker
   when: create_container_network

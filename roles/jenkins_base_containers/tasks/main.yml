@@ -12,6 +12,9 @@
     - Restart Docker
   when: create_container_network
 
+- name: Flush handlers
+  ansible.builtin.meta: flush_handlers
+
 - name: Deploy a jenkins-{{ image_to_deploy }} container
   community.docker.docker_container:
     name: "{{ container_name }}"

@@ -17,9 +17,14 @@ include python.mk
 VIRTUALENV_PYTHON_VERSION = 3.9.5
 
 include ansible.mk
-ANSISRC = $(shell find . \( -type f \) \
-	-or \( -name '*.yml' \) \
+ANSISRC = $(shell find . \
+	\( \
+		\( -type f \) \
+		-or \( -name '*.yml' \) \
+	\) \
 	-and ! \( -name 'galaxy.yml' \) \
+	-and ! \( -name '.python-version' \) \
+	-and ! \( -path '*.git*' \) \
 )
 
 # executables

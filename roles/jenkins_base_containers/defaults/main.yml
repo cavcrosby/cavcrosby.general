@@ -1,0 +1,32 @@
+---
+image_to_deploy: base
+image_tag: v1.0.0
+create_container_network: true
+
+# other vars that mimic the setup of docker compose
+container_name: jenkins
+container_cpus: 1.0
+container_memory: 1G
+container_volume: jenkins_home:/var/jenkins_home
+# The bridge name cannot be too long else the Docker daemon will have issues
+# trying to use the name (or a numerical result out of range error). For
+# reference:
+# https://stackoverflow.com/questions/53449304/what-can-be-the-max-length-of-a-docker-compose-network-name
+container_network: jbc1
+container_bridge_ipv4_addr: 192.168.147.1
+container_bridge_ipv4_subnet: 192.168.147.0/24
+container_ipv4_address: 192.168.147.2
+jenkins_port_mapping: 8080:8080
+jenkins_agents_port_mapping: 50000:50000
+
+# env variables expected by Jenkins
+jenkins_url: 127.0.0.1:8080
+jenkins_admin_id: cavcrosby
+jenkins_admin_password: Passw0rd!
+jenkins_admin_fullname: Conner Crosby
+jenkins_admin_email: conner@cavcrosby.tech
+jenkins_admin_email_secret: ""
+smtp_server_addr: smtp.gmail.com
+jenkins_github_credential_id: cavcrosby-github
+jenkins_github_credential_username: cavcrosby
+jenkins_github_credential_secret: ""

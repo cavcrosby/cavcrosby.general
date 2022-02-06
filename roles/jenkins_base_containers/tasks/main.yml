@@ -15,7 +15,7 @@
 - name: Flush handlers
   ansible.builtin.meta: flush_handlers
 
-- name: Deploy a jenkins-{{ image_to_deploy }} container
+- name: Deploy a jenkins-base container
   community.docker.docker_container:
     name: "{{ container_name }}"
     image: cavcrosby/jenkins-{{ image_to_deploy }}:{{ image_tag }}
@@ -46,7 +46,7 @@
   when: image_to_deploy == "base"
 
 # TODO(cavcrosby): release v1.4.1 to include the torkel image variant
-- name: Deploy a jenkins-{{ image_to_deploy }} container
+- name: Deploy a jenkins-torkel container
   community.docker.docker_container:
     name: "{{ container_name }}"
     image: cavcrosby/jenkins-{{ image_to_deploy }}:{{ image_tag }}

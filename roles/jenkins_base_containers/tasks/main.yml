@@ -39,5 +39,8 @@
       JENKINS_GITHUB_CREDENTIAL_ID: "{{ jenkins_github_credential_id }}"
       JENKINS_GITHUB_CREDENTIAL_USERNAME: "{{ jenkins_github_credential_username }}"
       JENKINS_GITHUB_CREDENTIAL_SECRET: "{{ jenkins_github_credential_secret }}"
+  # TODO(cavcrosby): add a prior task that ensures the docker image actually exists
+  # before trying to make a container from it. I've had numerous times where I can't
+  # remember why this task would fail and it would be for that reason.
   no_log: true
   when: image_to_deploy == "base"

@@ -45,7 +45,6 @@
   no_log: true
   when: image_to_deploy == "base"
 
-# TODO(cavcrosby): release v1.4.1 to include the torkel image variant
 - name: Deploy a jenkins-torkel container
   community.docker.docker_container:
     name: "{{ container_name }}"

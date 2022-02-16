@@ -4,6 +4,10 @@
     dest: /etc/systemd/system/lxd.service
     mode: "644"
     content: |
+      #
+      #
+      # ANSIBLE MANAGED
+
       [Unit]
       Description=Linux Container Daemon
 

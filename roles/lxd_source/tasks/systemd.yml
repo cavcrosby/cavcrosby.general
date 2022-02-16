@@ -1,7 +1,4 @@
 ---
-# TODO(cavcrosby): sysvinit's init script directly invokes the daemon binary vs
-# indirectly accessing the daemon binary via the wrapper. I also wish to reflect
-# the same changes here.
 - name: Create a LXD service unit file
   ansible.builtin.copy:
     dest: /etc/systemd/system/lxd.service
@@ -12,8 +9,9 @@
 
       [Service]
       Type=exec
-      ExecStart={{ lxd_wrapper_path }} --group {{ lxd_access_group }}
-      ExecStop={{ lxd_wrapper_path }} shutdown
+      ExecStart={{ lxd_go_path }}/bin/lxd --group {{ lxd_access_group }}
+      ExecStop={{ lxd_go_path }}/bin/lxd shutdown
+      Environment=LD_LIBRARY_PATH={{ lxd_ld_library_path }}
 
       [Install]
       WantedBy=multi-user.target

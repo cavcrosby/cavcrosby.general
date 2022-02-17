@@ -94,6 +94,9 @@
           exit 0
       become: yes
       notify:
-        - Save the current iptables rules
+        - Stop the LXD service
   vars:
     lxd_initscript_vars_path: /etc/default/lxd
+
+- name: Flush the LXD service handlers
+  ansible.builtin.meta: flush_handlers

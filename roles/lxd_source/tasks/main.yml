@@ -229,6 +229,8 @@
     enabled: yes
     state: started
   become: yes
+  notify:
+    - Save the current iptables rules
 
 # MONITOR(cavcrosby): it was found that the LXD unix socket file would sometimes
 # not exist by the time certain tasks were ran, causing them to fail/behave

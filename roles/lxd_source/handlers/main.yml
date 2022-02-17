@@ -26,3 +26,15 @@
     - CGO_LDFLAGS_ALLOW: "{{ lxd_cgo_ldflags_allow }}"
     - LD_LIBRARY_PATH: "{{ lxd_ld_library_path }}"
     - GOPATH: "{{ lxd_go_path }}"
+
+- name: Reload the systemd daemon
+  ansible.builtin.systemd:
+    daemon_reload: yes
+  become: yes
+
+- name: Stop the LXD service
+  ansible.builtin.service:
+    name: lxd
+    enabled: yes
+    state: stopped
+  become: yes

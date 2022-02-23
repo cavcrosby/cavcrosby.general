@@ -6,11 +6,10 @@ galaxy_info:
   min_ansible_version: 2.12.1
 
   platforms:
-  - name: Debian
-    versions:
-    - bullseye
+    - name: Debian
+      versions:
+        - bullseye
 
-  galaxy_tags: [
-    "lxd",
-    "containers"
-  ]
+  galaxy_tags:
+    - lxd
+    - containers

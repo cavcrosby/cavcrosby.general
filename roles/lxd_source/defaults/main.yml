@@ -8,7 +8,7 @@ lxd_trust_password: "Passw0rd!"
 lxd_go_version: 1.17.5
 lxd_go_arch: amd64
 lxd_go_extracted_tarball_path: /usr/local/src
-lxd_go_sha256_checksum: "bd78114b0d441b029c8fe0341f4910370925a4d270a6a590668840675b0c653e"
+lxd_go_sha256_checksum: bd78114b0d441b029c8fe0341f4910370925a4d270a6a590668840675b0c653e
 
 # Setting this variable (to something other than an empty string) assumes the
 # source code for LXD will be located at the value set by this variable.

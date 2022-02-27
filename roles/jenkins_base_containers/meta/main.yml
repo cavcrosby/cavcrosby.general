@@ -4,3 +4,8 @@ galaxy_info:
   description: Used to instantiate Jenkins containers that derive from the jenkins-base container
   license: BSD-3-Clause
   min_ansible_version: 2.12.1
+
+  platforms:
+    - name: Debian
+      versions:
+        - bullseye

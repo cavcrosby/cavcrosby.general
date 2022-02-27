@@ -7,4 +7,4 @@ go_env_vars_file_path: /root/.bashrc
 
 _go_extracted_dir_name: go{{ go_version }}
 _go_tarball: go{{ go_version }}.linux-{{ go_arch }}.tar.gz
-_go_download_path: /tmp/golang{{ ansible_date_time.epoch }}
+_go_download_path: /tmp/{{ _go_tarball }}{{ ansible_date_time.epoch }}

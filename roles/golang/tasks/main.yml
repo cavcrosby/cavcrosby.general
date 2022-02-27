@@ -14,26 +14,33 @@
     - check_go_version.stdout != ("go" + go_version)
     - check_go_version.stdout | length != 0
 
-- name: Create Go's download directory
-  ansible.builtin.file:
-    path: "{{ _go_download_path }}"
-    state: directory
-    mode: "700"
-
 - name: Download Go
   ansible.builtin.get_url:
     url: "https://dl.google.com/go/{{ _go_tarball }}"
     dest: "{{ _go_download_path }}"
     checksum: "sha256:{{ go_sha256_checksum }}"
+  when:
+    - check_go_version.stdout != ("go" + go_version)
 
 - name: Extract Go
   ansible.builtin.unarchive:
-    src: "{{ _go_download_path }}/{{ _go_tarball }}"
+    src: "{{ _go_download_path }}"
     dest: "{{ go_extracted_tarball_parent_path }}"
     remote_src: yes
     extra_opts:
       - --transform
       - s/go/{{ _go_extracted_dir_name }}/
+  when:
+    - check_go_version.stdout != ("go" + go_version)
+
+- name: Remove previous PATH set with the previous Go binary location
+  ansible.builtin.lineinfile:
+    state: absent
+    path: "{{ go_env_vars_file_path }}"
+    regexp: '^export PATH="(.+:|)?{{ go_extracted_tarball_parent_path }}/{{ check_go_version.stdout }}/bin(:.+|)"'
+    line: 'export PATH="${PATH}:{{ go_extracted_tarball_parent_path }}/{{ check_go_version.stdout }}/bin"'
+  when:
+    - check_go_version.stdout != ("go" + go_version)
 
 - name: Append PATH with the Go binary location in the go env vars file
   ansible.builtin.import_role:

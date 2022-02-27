@@ -62,22 +62,13 @@
 - name: Install Golang that is specific for LXD
   ansible.builtin.import_role:
     name: golang
+  become: yes
   vars:
     go_version: "{{ lxd_go_version }}"
     go_arch: "{{ lxd_go_arch }}"
-    go_extracted_tarball_path: "{{ lxd_go_extracted_tarball_path }}"
+    go_extracted_tarball_parent_path: "{{ lxd_go_extracted_tarball_parent_path }}"
     go_sha256_checksum: "{{ lxd_go_sha256_checksum }}"
-
-- name: Append PATH with the Go binary location for root
-  ansible.builtin.import_role:
-    name: common
-    tasks_from: managed_lineinfile
-  vars:
-    path: "{{ _roots_home }}/.bashrc"
-    regexp: '^export PATH="(.+:|)?{{ lxd_go_extracted_tarball_path }}/go/bin(:.+|)"'
-    line: 'export PATH="${PATH}:{{ lxd_go_extracted_tarball_path }}/go/bin"'
-    line_identifier: PATH that includes the Go binary
-  become: yes
+    go_env_vars_file_path: "{{ lxd_go_env_vars_file_path }}"
 
 - name: Set USE_LXC_BRIDGE to false
   ansible.builtin.import_role:

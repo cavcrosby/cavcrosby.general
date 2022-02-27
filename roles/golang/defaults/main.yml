@@ -1,8 +1,10 @@
 ---
 go_version: 1.17.5
 go_arch: amd64
-go_extracted_tarball_path: /usr/local
+go_extracted_tarball_parent_path: /usr/local/src
 go_sha256_checksum: bd78114b0d441b029c8fe0341f4910370925a4d270a6a590668840675b0c653e
+go_env_vars_file_path: /root/.bashrc
 
+_go_extracted_dir_name: go{{ go_version }}
 _go_tarball: go{{ go_version }}.linux-{{ go_arch }}.tar.gz
-_go_download_path: /tmp/ansible/golang
+_go_download_path: /tmp/golang{{ ansible_date_time.epoch }}

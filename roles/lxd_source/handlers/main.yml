@@ -10,7 +10,7 @@
 - name: Build the LXD libraries
   ansible.builtin.shell:
     chdir: "{{ lxd_src_path | default(lxd_extracted_tarball_path + '/' + _lxd_extracted_dir, true) }}"
-    cmd: . {{ _roots_home }}/.bashrc && make deps
+    cmd: . "{{ lxd_go_env_vars_file_path }}" && make deps
   become: yes
   environment:
     - GOPATH: "{{ lxd_go_path }}"
@@ -18,7 +18,7 @@
 - name: Build LXD
   ansible.builtin.shell:
     chdir: "{{ lxd_src_path | default(lxd_extracted_tarball_path + '/' + _lxd_extracted_dir, true) }}"
-    cmd: . {{ _roots_home }}/.bashrc && make
+    cmd: . "{{ lxd_go_env_vars_file_path }}" && make
   become: yes
   environment:
     - CGO_CFLAGS: "{{ lxd_cgo_cflags }}"

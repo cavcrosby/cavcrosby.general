@@ -1,23 +1,46 @@
 ---
-# DISCUSS(cavcrosby): look into deciding whether or not to check if Go is
-# installed first.
+- name: Check for role installed Go version
+  ansible.builtin.shell:
+    cmd: . "{{ go_env_vars_file_path }}" && go env GOVERSION
+  register: check_go_version
+  failed_when: false
+  changed_when: false
+
+- name: Remove previous role installed Go
+  ansible.builtin.file:
+    path: "{{ go_extracted_tarball_parent_path }}/{{ check_go_version.stdout }}"
+    state: absent
+  when:
+    - check_go_version.stdout != ("go" + go_version)
+    - check_go_version.stdout | length != 0
+
 - name: Create Go's download directory
   ansible.builtin.file:
     path: "{{ _go_download_path }}"
     state: directory
     mode: "700"
-  become: yes
 
 - name: Download Go
   ansible.builtin.get_url:
     url: "https://dl.google.com/go/{{ _go_tarball }}"
     dest: "{{ _go_download_path }}"
     checksum: "sha256:{{ go_sha256_checksum }}"
-  become: yes
 
 - name: Extract Go
   ansible.builtin.unarchive:
     src: "{{ _go_download_path }}/{{ _go_tarball }}"
-    dest: "{{ go_extracted_tarball_path }}"
+    dest: "{{ go_extracted_tarball_parent_path }}"
     remote_src: yes
-  become: yes
+    extra_opts:
+      - --transform
+      - s/go/{{ _go_extracted_dir_name }}/
+
+- name: Append PATH with the Go binary location in the go env vars file
+  ansible.builtin.import_role:
+    name: common
+    tasks_from: managed_lineinfile
+  vars:
+    path: "{{ go_env_vars_file_path }}"
+    regexp: '^export PATH="(.+:|)?{{ go_extracted_tarball_parent_path }}/{{ _go_extracted_dir_name }}/bin(:.+|)"'
+    line: 'export PATH="${PATH}:{{ go_extracted_tarball_parent_path }}/{{ _go_extracted_dir_name }}/bin"'
+    line_identifier: PATH that includes the Go binary

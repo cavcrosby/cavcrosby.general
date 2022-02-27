@@ -7,8 +7,9 @@ lxd_trust_password: "Passw0rd!"
 # Variables related to LXD's Go installation.
 lxd_go_version: 1.17.5
 lxd_go_arch: amd64
-lxd_go_extracted_tarball_path: /usr/local/src
+lxd_go_extracted_tarball_parent_path: /usr/local/src
 lxd_go_sha256_checksum: bd78114b0d441b029c8fe0341f4910370925a4d270a6a590668840675b0c653e
+lxd_go_env_vars_file_path: /root/.bashrc
 
 # Setting this variable (to something other than an empty string) assumes the
 # source code for LXD will be located at the value set by this variable.
@@ -85,7 +86,6 @@ _default_lxc_bridge: lxcbr0
 # serve as the prefix in said tarball name.
 _lxd_extracted_dir: lxd-{{ lxd_release_version }}
 
-_roots_home: /root
 # DISCUSS(cavcrosby): /run could be mounted from a device that is 100MB in size,
 # which through testing I found that the go tarball exceeds this size. I might
 # want to consider moving stuff out of run and into tmp? Assuming on reboots that

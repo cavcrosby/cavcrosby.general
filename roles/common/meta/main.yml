@@ -9,6 +9,6 @@ galaxy_info:
   # because I have not tested this on any other platforms. Eventually look into
   # testing this role on other platforms.
   platforms:
-  - name: Debian
-    versions:
-    - bullseye
+    - name: Debian
+      versions:
+        - bullseye

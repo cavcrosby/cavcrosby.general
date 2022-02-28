@@ -4,6 +4,8 @@
     src: https://github.com/lxc/lxd/releases/download/lxd-{{ lxd_release_version }}/{{ _lxd_extracted_dir }}.tar.gz
     dest: "{{ lxd_extracted_tarball_path }}"
     remote_src: yes
+    extra_opts:
+      - --no-same-owner
   become: yes
   when: lxd_src_path | length == 0
 

@@ -28,6 +28,7 @@
     dest: "{{ go_extracted_tarball_parent_path }}"
     remote_src: yes
     extra_opts:
+      - --no-same-owner
       - --transform
       - s/go/{{ _go_extracted_dir_name }}/
   when:

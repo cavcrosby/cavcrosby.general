@@ -2,7 +2,7 @@
 lxd_release_version: 4.0.8
 lxd_access_group: sudo
 lxd_extracted_tarball_path: /usr/local/src
-lxd_trust_password: "Passw0rd!"
+lxd_trust_password: Passw0rd!
 
 # Variables related to LXD's Go installation.
 lxd_go_version: 1.17.5
@@ -29,7 +29,7 @@ lxd_cgo_cflags: >
 lxd_cgo_ldflags: >
   -L{{ lxd_extracted_tarball_path }}/lxd-{{ lxd_release_version }}/vendor/raft/.libs/
   -L{{ lxd_extracted_tarball_path }}/lxd-{{ lxd_release_version }}/vendor/dqlite/.libs/
-lxd_cgo_ldflags_allow: "(-Wl,-wrap,pthread_create)|(-Wl,-z,now)"
+lxd_cgo_ldflags_allow: (-Wl,-wrap,pthread_create)|(-Wl,-z,now)
 lxd_ld_library_path: "{{ lxd_extracted_tarball_path }}/lxd-{{ lxd_release_version }}/vendor/raft/.libs/:{{ lxd_extracted_tarball_path }}/lxd-{{ lxd_release_version }}/vendor/dqlite/.libs/" # noqa 204
 
 # Bridge interface used by LXD to communicate with LXD containers.

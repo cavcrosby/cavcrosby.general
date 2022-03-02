@@ -34,4 +34,4 @@ jenkins_main_num_executors: "0"
 jenkins_agent_name1: agent1
 jenkins_agent_desc1: agent1's description
 jenkins_agent_num_executors1: "2"
-jenkins_agent_remote_root_dir1: "/var/lib/jenkins-agent/node1"
+jenkins_agent_remote_root_dir1: /var/lib/jenkins-agent/node1

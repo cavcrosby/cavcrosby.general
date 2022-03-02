@@ -86,10 +86,6 @@ _default_lxc_bridge: lxcbr0
 # serve as the prefix in said tarball name.
 _lxd_extracted_dir: lxd-{{ lxd_release_version }}
 
-# DISCUSS(cavcrosby): /run could be mounted from a device that is 100MB in size,
-# which through testing I found that the go tarball exceeds this size. I might
-# want to consider moving stuff out of run and into tmp? Assuming on reboots that
-# /tmp is wiped.
-_lxd_data_dir: /run/ansible/lxd_source
+_lxd_data_dir: /tmp/ansible/lxd_source
 _lxd_remote_preseed_path: "{{ _lxd_data_dir }}/lxd.yaml"
 _running_lxd_remote_preseed_path: "{{ _lxd_data_dir }}/running_lxd.yaml"

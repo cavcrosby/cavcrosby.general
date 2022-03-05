@@ -1,0 +1,105 @@
+---
+- name: Create jenkins role's config directory
+  ansible.builtin.file:
+    path: "{{ _jenkins_config_dir }}"
+    state: directory
+    owner: "{{ jenkins_system_user }}"
+    group: "{{ jenkins_system_user }}"
+    mode: "700"
+  become: yes
+
+- name: Create jenkins user's java share directory
+  ansible.builtin.file:
+    path: "{{ _jenkins_system_user_jars_path }}"
+    state: directory
+    owner: "{{ jenkins_system_user }}"
+    group: "{{ jenkins_system_user }}"
+    mode: "755"
+  become: yes
+
+# this is to store definitions for user services
+- name: Create jenkins user's systemd units directory
+  ansible.builtin.file:
+    path: "{{ _jenkins_system_user_systemd_units_path }}"
+    state: directory
+    owner: "{{ jenkins_system_user }}"
+    group: "{{ jenkins_system_user }}"
+    mode: "755"
+  become: yes
+
+# This list is specific to Debian/Devuan at the moment. Can be expanded to a
+# vars directory to install dependencies based on the distro.
+- name: Install system dependencies
+  ansible.builtin.apt:
+    name:
+      - openjdk-11-jre-headless
+    state: present
+  become: yes
+
+- name: Create the agentopts configuration file
+  ansible.builtin.copy:
+    dest: "{{ _agentopts_config_file_path }}"
+    owner: "{{ jenkins_system_user }}"
+    group: "{{ jenkins_system_user }}"
+    mode: "600"
+    content: |
+      -noReconnect
+      -jnlpUrl
+      {{ jenkins_main_node_url }}/computer/{{ jenkins_agent_name }}/jenkins-agent.jnlp
+      -jnlpCredentials
+      {{ jenkins_username }}:{{ jenkins_password }}
+      -workDir
+      {{ jenkins_workingdir }}
+  become: yes
+
+- name: Download {{ _agent_executable }} from the Jenkins instance
+  ansible.builtin.get_url:
+    url: "{{ jenkins_main_node_url }}/jnlpJars/{{ _agent_executable }}"
+    dest: "{{ _agent_executable_download_path }}"
+    checksum: "sha256:{{ _agent_executable_sha256_checksum }}"
+    owner: "{{ jenkins_system_user }}"
+    group: "{{ jenkins_system_user }}"
+  become: yes
+
+# Enabling lingering is needed as otherwise once the user's systemd process (e.g.
+# systemd --user) exits, any user services also exit. For reference:
+# https://wiki.archlinux.org/title/systemd/User#Automatic_start-up_of_systemd_user_instances
+- name: Enable lingering for {{ jenkins_system_user }} user
+  ansible.builtin.command: loginctl enable-linger {{ jenkins_system_user }}
+  changed_when: false
+
+- name: Create a jenkins-agent service unit file
+  ansible.builtin.copy:
+    dest: "{{ _jenkins_system_user_systemd_units_path }}/jenkins-agent.service"
+    owner: "{{ jenkins_system_user }}"
+    group: "{{ jenkins_system_user }}"
+    mode: "644"
+    content: |
+      #
+      #
+      # ANSIBLE MANAGED
+
+      [Unit]
+      Description=Jenkins Agent Connector Daemon
+
+      [Service]
+      Type=exec
+      ExecStart=java -jar "{{ _agent_executable_download_path }}" @"{{ _agentopts_config_file_path }}"
+
+      [Install]
+      WantedBy=default.target
+  become: yes
+  notify:
+    - Reload the systemd daemon for jenkins_system_user's user services
+
+- name: Flush the jenkins-agent service handlers
+  ansible.builtin.meta: flush_handlers
+
+- name: Enable the jenkins-agent service
+  ansible.builtin.systemd:
+    name: jenkins-agent
+    enabled: yes
+    state: started
+    scope: user
+  become: yes
+  become_user: "{{ jenkins_system_user }}"

@@ -1,0 +1,41 @@
+---
+# this will be the user that Jenkins performs builds as
+jenkins_system_user: jenkins
+
+# This should be overwritten if another part of Ansible code designates a home dir
+# for the "jenkins" user.
+jenkins_system_user_home: /home/{{ jenkins_system_user }}
+jenkins_system_user_password: $6$1234$FK.dnaw1F49Lsr/7W0A8miXkoXxVzDEHBepDZA3kR8YHkj8O1Dv.lAXp8o0E6gaEJXryKUXgxxKAvIhHASoDe. # Passw0rd!
+
+# This file provides the options to the _agent_executable. This is so credentials
+# are not leaked when invoking the executable (e.g. unable to view these
+# credentials by looking at the resulting process).
+agentopts_config_file: agentopts.cfg
+
+# the Jenkins instance url
+jenkins_main_node_url: http://127.0.0.1:8080
+
+# name of the agent that is connecting to the Jenkins instance
+jenkins_agent_name: agent1
+
+# Jenkins instance user credentials
+jenkins_username: cavcrosby
+jenkins_password: Passw0rd!
+
+# where contents from the Jenkins instance will be stored
+jenkins_workingdir: /var/lib/jenkins-agent/node1
+
+_agent_executable: agent.jar
+_agent_executable_sha256_checksum: ddd7f394601878fb47c9b3a089cdf4a57895050bde386809057028063279cfad
+_agent_executable_download_path: "{{ _jenkins_system_user_jars_path }}/{{ _agent_executable }}"
+_agentopts_config_file_path: "{{ _jenkins_config_dir }}/{{ agentopts_config_file }}"
+
+# inspired by:
+# https://stackoverflow.com/questions/54634877/where-to-place-a-jar-file-on-linux#answer-54635566
+_jenkins_system_user_jars_path: "{{ jenkins_system_user_home }}/.local/share/java"
+_jenkins_system_user_systemd_units_path: "{{ jenkins_system_user_home }}/.config/systemd/user"
+
+# DISCUSS(cavcrosby): should I use a different directory name besides "ansible"? This
+# might get confusing when determining if this contains data related to Ansible
+# itself or other parts of it (e.g. role specific data).
+_jenkins_config_dir: "{{ jenkins_system_user_home }}/.config/ansible/jenkins"

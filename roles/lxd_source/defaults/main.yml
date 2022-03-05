@@ -1,10 +1,17 @@
 ---
 lxd_release_version: 4.0.8
+
+# the user group that is able to talk to LXD
 lxd_access_group: sudo
+
+# LXD's tarball contents are usually under a new directory, hence a new directory
+# with LXD's tarball contents will be created.
 lxd_extracted_tarball_path: /usr/local/src
+
+# the password used to allow a remote host to interact with LXD over TCP/IP
 lxd_trust_password: Passw0rd!
 
-# Variables related to LXD's Go installation.
+# variables related to LXD's Go installation
 lxd_go_version: 1.17.5
 lxd_go_arch: amd64
 lxd_go_extracted_tarball_parent_path: /usr/local/src
@@ -32,7 +39,7 @@ lxd_cgo_ldflags: >
 lxd_cgo_ldflags_allow: (-Wl,-wrap,pthread_create)|(-Wl,-z,now)
 lxd_ld_library_path: "{{ lxd_extracted_tarball_path }}/lxd-{{ lxd_release_version }}/vendor/raft/.libs/:{{ lxd_extracted_tarball_path }}/lxd-{{ lxd_release_version }}/vendor/dqlite/.libs/" # noqa 204
 
-# Bridge interface used by LXD to communicate with LXD containers.
+# bridge interface used by LXD to communicate with LXD containers
 lxd_bridge_device_name: lxdbr0
 
 # The LXD binary should not be own by a non-root user (or group). Hence, the
@@ -45,7 +52,7 @@ lxd_go_path: /usr/local/share/go
 # wrapper path is before the GOPATH/bin dir on the PATH.
 lxd_wrapper_path: /usr/local/bin/lxd
 
-# Used to automate the initialization of LXD.
+# used to automate the initialization of LXD
 lxd_preseed: |
   config:
     core.https_address: {{ ansible_default_ipv4.address }}
@@ -79,7 +86,7 @@ lxd_preseed: |
         type: disk
     name: default
 
-# The default bridge created when installing 'a' lxc package.
+# the default bridge created when installing 'a' lxc package
 _default_lxc_bridge: lxcbr0
 
 # The directory created from a extracted lxd release tarball, which "should" also

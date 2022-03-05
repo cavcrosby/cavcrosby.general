@@ -8,6 +8,7 @@ container_name: jenkins
 container_cpus: 1.0
 container_memory: 1G
 container_volume: jenkins_home:/var/jenkins_home
+
 # The bridge name cannot be too long else the Docker daemon will have issues
 # trying to use the name (or a numerical result out of range error). For
 # reference:
@@ -19,7 +20,7 @@ container_ipv4_address: 192.168.147.2
 jenkins_port_mapping: 8080:8080
 jenkins_agents_port_mapping: 50000:50000
 
-# env variables expected by Jenkins
+# env variables expected by this type of Jenkins instance
 jenkins_url: 127.0.0.1:8080
 jenkins_admin_id: cavcrosby
 jenkins_admin_password: Passw0rd!

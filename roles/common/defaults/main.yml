@@ -1,2 +1,3 @@
 ---
+# used by the Debian package iptables-persistent
 iptables_up_path: /etc/iptables/rules.v4

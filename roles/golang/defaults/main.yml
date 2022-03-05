@@ -1,8 +1,14 @@
 ---
 go_version: 1.17.5
 go_arch: amd64
+
+# go's tarball contents are usually under the 'go' directory, hence a new
+# directory with go's tarball contents will be created.
 go_extracted_tarball_parent_path: /usr/local/src
 go_sha256_checksum: bd78114b0d441b029c8fe0341f4910370925a4d270a6a590668840675b0c653e
+
+# For env vars related to the go tool (e.g. setting the PATH for a user to access
+# the go tool).
 go_env_vars_file_path: /root/.bashrc
 
 _go_extracted_dir_name: go{{ go_version }}

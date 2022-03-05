@@ -6,7 +6,7 @@ lxd_access_group: sudo
 
 # LXD's tarball contents are usually under a new directory, hence a new directory
 # with LXD's tarball contents will be created.
-lxd_extracted_tarball_path: /usr/local/src
+lxd_extracted_tarball_parent_path: /usr/local/src
 
 # the password used to allow a remote host to interact with LXD over TCP/IP
 lxd_trust_password: Passw0rd!
@@ -31,13 +31,13 @@ lxd_src_path: ""
 # dependency paths together, I feels its best that the number of directories for
 # dependencies be limited or else conflicts could occur.
 lxd_cgo_cflags: >
-  -I{{ lxd_extracted_tarball_path }}/lxd-{{ lxd_release_version }}/vendor/raft/include/
-  -I{{ lxd_extracted_tarball_path }}/lxd-{{ lxd_release_version }}/vendor/dqlite/include/
+  -I{{ lxd_extracted_tarball_parent_path }}/lxd-{{ lxd_release_version }}/vendor/raft/include/
+  -I{{ lxd_extracted_tarball_parent_path }}/lxd-{{ lxd_release_version }}/vendor/dqlite/include/
 lxd_cgo_ldflags: >
-  -L{{ lxd_extracted_tarball_path }}/lxd-{{ lxd_release_version }}/vendor/raft/.libs/
-  -L{{ lxd_extracted_tarball_path }}/lxd-{{ lxd_release_version }}/vendor/dqlite/.libs/
+  -L{{ lxd_extracted_tarball_parent_path }}/lxd-{{ lxd_release_version }}/vendor/raft/.libs/
+  -L{{ lxd_extracted_tarball_parent_path }}/lxd-{{ lxd_release_version }}/vendor/dqlite/.libs/
 lxd_cgo_ldflags_allow: (-Wl,-wrap,pthread_create)|(-Wl,-z,now)
-lxd_ld_library_path: "{{ lxd_extracted_tarball_path }}/lxd-{{ lxd_release_version }}/vendor/raft/.libs/:{{ lxd_extracted_tarball_path }}/lxd-{{ lxd_release_version }}/vendor/dqlite/.libs/" # noqa 204
+lxd_ld_library_path: "{{ lxd_extracted_tarball_parent_path }}/lxd-{{ lxd_release_version }}/vendor/raft/.libs/:{{ lxd_extracted_tarball_parent_path }}/lxd-{{ lxd_release_version }}/vendor/dqlite/.libs/" # noqa 204
 
 # bridge interface used by LXD to communicate with LXD containers
 lxd_bridge_device_name: lxdbr0

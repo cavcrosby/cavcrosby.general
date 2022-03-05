@@ -2,7 +2,7 @@
 - name: Grab a LXD release tarball, and extract the archive
   ansible.builtin.unarchive:
     src: https://github.com/lxc/lxd/releases/download/lxd-{{ lxd_release_version }}/{{ _lxd_extracted_dir }}.tar.gz
-    dest: "{{ lxd_extracted_tarball_path }}"
+    dest: "{{ lxd_extracted_tarball_parent_path }}"
     remote_src: yes
     extra_opts:
       - --no-same-owner
@@ -11,7 +11,7 @@
 
 - name: Build the LXD libraries
   ansible.builtin.shell:
-    chdir: "{{ lxd_src_path | default(lxd_extracted_tarball_path + '/' + _lxd_extracted_dir, true) }}"
+    chdir: "{{ lxd_src_path | default(lxd_extracted_tarball_parent_path + '/' + _lxd_extracted_dir, true) }}"
     cmd: . "{{ lxd_go_env_vars_file_path }}" && make deps
   become: yes
   environment:
@@ -19,7 +19,7 @@
 
 - name: Build LXD
   ansible.builtin.shell:
-    chdir: "{{ lxd_src_path | default(lxd_extracted_tarball_path + '/' + _lxd_extracted_dir, true) }}"
+    chdir: "{{ lxd_src_path | default(lxd_extracted_tarball_parent_path + '/' + _lxd_extracted_dir, true) }}"
     cmd: . "{{ lxd_go_env_vars_file_path }}" && make
   become: yes
   environment:

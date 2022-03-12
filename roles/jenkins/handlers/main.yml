@@ -1,5 +1,5 @@
 ---
-- name: Reload the systemd daemon for jenkins_system_user's user services
+- name: Reload the systemd daemon for the jenkins_system_user's user services
   ansible.builtin.systemd:
     daemon_reload: yes
     scope: user

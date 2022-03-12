@@ -122,7 +122,7 @@
 - name: Flush the LXD installation handlers
   ansible.builtin.meta: flush_handlers
 
-- name: Update secure path to add {{ lxd_go_path }}
+- name: Update secure path to add the lxd_go_path
   ansible.builtin.copy:
     dest: /etc/sudoers.d/ansible-lxd-source
     content: |
@@ -164,23 +164,23 @@
     content: |
       # ANSIBLE MANAGED
       root:100000:65536
-      {{ ansible_user_id }}:100000:65536
+      {{ ansible_user }}:100000:65536
   become: yes
   loop:
     - /etc/subuid
     - /etc/subgid
 
-- name: Create the '{{ lxd_access_group }}' group
+- name: Create the lxd_access_group
   ansible.builtin.group:
     name: "{{ lxd_access_group }}"
     state: present
   become: yes
 
-- name: Add {{ ansible_user_id }} to '{{ lxd_access_group }}' group
+- name: Add ansible_user to the lxd_access_group
   ansible.builtin.user:
     append: yes
     groups: "{{ lxd_access_group }}"
-    name: "{{ ansible_user_id }}"
+    name: "{{ ansible_user }}"
   become: yes
 
 # MONITOR(cavcrosby): ideally this should only run when the ansible user is added

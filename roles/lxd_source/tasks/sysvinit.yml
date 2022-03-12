@@ -57,7 +57,7 @@
           ### END INIT INFO
 
           readonly NAME=lxd
-          readonly DAEMON="{{ lxd_go_path }}/bin/lxd"
+          readonly DAEMON="{{ lxd_source_go_path }}/bin/lxd"
           readonly LD_LIBRARY_PATH="{{ lxd_ld_library_path }}"
           export LD_LIBRARY_PATH
 

@@ -12,22 +12,22 @@
 - name: Build the LXD libraries
   ansible.builtin.shell:
     chdir: "{{ lxd_src_path | default(lxd_extracted_tarball_parent_path + '/' + _lxd_extracted_dir, true) }}"
-    cmd: . "{{ lxd_go_env_vars_file_path }}" && make deps
+    cmd: . "{{ lxd_source_go_env_vars_file_path }}" && make deps
   become: yes
   environment:
-    - GOPATH: "{{ lxd_go_path }}"
+    - GOPATH: "{{ lxd_source_go_path }}"
 
 - name: Build LXD
   ansible.builtin.shell:
     chdir: "{{ lxd_src_path | default(lxd_extracted_tarball_parent_path + '/' + _lxd_extracted_dir, true) }}"
-    cmd: . "{{ lxd_go_env_vars_file_path }}" && make
+    cmd: . "{{ lxd_source_go_env_vars_file_path }}" && make
   become: yes
   environment:
     - CGO_CFLAGS: "{{ lxd_cgo_cflags }}"
     - CGO_LDFLAGS: "{{ lxd_cgo_ldflags }}"
     - CGO_LDFLAGS_ALLOW: "{{ lxd_cgo_ldflags_allow }}"
     - LD_LIBRARY_PATH: "{{ lxd_ld_library_path }}"
-    - GOPATH: "{{ lxd_go_path }}"
+    - GOPATH: "{{ lxd_source_go_path }}"
 
 - name: Reload the systemd daemon
   ansible.builtin.systemd:

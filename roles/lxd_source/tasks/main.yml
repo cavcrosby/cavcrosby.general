@@ -13,7 +13,7 @@
 
 - name: Create GOPATH's bin directory
   ansible.builtin.file:
-    path: "{{ lxd_go_path }}/bin"
+    path: "{{ lxd_source_go_path }}/bin"
     state: directory
     mode: "775"
   become: yes
@@ -24,8 +24,8 @@
     tasks_from: managed_lineinfile
   vars:
     path: "{{ ansible_env['HOME'] }}/.bashrc"
-    regexp: '^export PATH="(.+:|)?{{ lxd_go_path }}/bin(:.+|)"'
-    line: 'export PATH="${PATH}:{{ lxd_go_path }}/bin"'
+    regexp: '^export PATH="(.+:|)?{{ lxd_source_go_path }}/bin(:.+|)"'
+    line: 'export PATH="${PATH}:{{ lxd_source_go_path }}/bin"'
     line_identifier: PATH that includes with GOPATH/bin
 
 # This list is specific to Debian 11 at the moment. Can be expanded to a vars
@@ -64,11 +64,11 @@
     name: golang
   become: yes
   vars:
-    go_version: "{{ lxd_go_version }}"
-    go_arch: "{{ lxd_go_arch }}"
-    go_extracted_tarball_parent_path: "{{ lxd_go_extracted_tarball_parent_path }}"
-    go_sha256_checksum: "{{ lxd_go_sha256_checksum }}"
-    go_env_vars_file_path: "{{ lxd_go_env_vars_file_path }}"
+    go_version: "{{ lxd_source_go_version }}"
+    go_arch: "{{ lxd_source_go_arch }}"
+    go_extracted_tarball_parent_path: "{{ lxd_source_go_extracted_tarball_parent_path }}"
+    go_sha256_checksum: "{{ lxd_source_go_sha256_checksum }}"
+    go_env_vars_file_path: "{{ lxd_source_go_env_vars_file_path }}"
 
 - name: Set USE_LXC_BRIDGE to false
   ansible.builtin.import_role:
@@ -107,7 +107,7 @@
 # affectedly this appears to occur anyways (at least when running lxd --version).
 - name: Check if LXD is installed
   ansible.builtin.shell: |
-    find "{{ lxd_go_path }}/bin" \( -name 'lxd' \) \
+    find "{{ lxd_source_go_path }}/bin" \( -name 'lxd' \) \
       -and \( -type f \)
   become: yes
   register: lxd_check
@@ -122,12 +122,12 @@
 - name: Flush the LXD installation handlers
   ansible.builtin.meta: flush_handlers
 
-- name: Update secure path to add the lxd_go_path
+- name: Update secure path to add the lxd_source_go_path
   ansible.builtin.copy:
     dest: /etc/sudoers.d/ansible-lxd-source
     content: |
       # ANSIBLE MANAGED
-      Defaults  secure_path=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:{{ lxd_go_path }}/bin
+      Defaults  secure_path=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:{{ lxd_source_go_path }}/bin
     mode: "440"
   become: yes
 
@@ -154,7 +154,7 @@
           exit 1
       fi
 
-      {{ lxd_go_path }}/bin/lxd "$@"
+      {{ lxd_source_go_path }}/bin/lxd "$@"
   become: yes
 
 - name: Create subuid && subgid files

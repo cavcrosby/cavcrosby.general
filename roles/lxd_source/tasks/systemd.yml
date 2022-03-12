@@ -13,8 +13,8 @@
 
       [Service]
       Type=exec
-      ExecStart={{ lxd_go_path }}/bin/lxd --group {{ lxd_access_group }}
-      ExecStop={{ lxd_go_path }}/bin/lxd shutdown
+      ExecStart={{ lxd_source_go_path }}/bin/lxd --group {{ lxd_access_group }}
+      ExecStop={{ lxd_source_go_path }}/bin/lxd shutdown
       Environment=LD_LIBRARY_PATH={{ lxd_ld_library_path }}
 
       [Install]

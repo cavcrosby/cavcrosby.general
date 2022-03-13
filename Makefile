@@ -32,9 +32,8 @@ ANSIBLE_GALAXY = ansible-galaxy
 ANSIBLE_PLAYBOOK = ansible-playbook
 ANSIBLE_VAULT = ansible-vault
 ENVSUBST = envsubst
-GIT = git
 executables = \
-	${GIT}
+	${base_executables}
 
 # simply expanded variables
 _check_executables := $(foreach exec,${executables},$(if $(shell command -v ${exec}),pass,$(error "No ${exec} in PATH")))

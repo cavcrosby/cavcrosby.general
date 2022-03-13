@@ -33,7 +33,6 @@ ANSIBLE_PLAYBOOK = ansible-playbook
 ANSIBLE_VAULT = ansible-vault
 ENVSUBST = envsubst
 GIT = git
-JINJA = jinja
 executables = \
 	${GIT}
 

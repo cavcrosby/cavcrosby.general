@@ -3,7 +3,7 @@ galaxy_info:
   author: Conner Crosby
   description: Installs LXD from source
   license: BSD-3-Clause
-  min_ansible_version: 2.12.1
+  min_ansible_version: 2.12.3
 
   platforms:
     - name: Debian

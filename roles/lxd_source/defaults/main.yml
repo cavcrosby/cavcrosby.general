@@ -37,8 +37,7 @@ lxd_cgo_ldflags: >
   -L{{ lxd_extracted_tarball_parent_path }}/lxd-{{ lxd_release_version }}/vendor/raft/.libs/
   -L{{ lxd_extracted_tarball_parent_path }}/lxd-{{ lxd_release_version }}/vendor/dqlite/.libs/
 lxd_cgo_ldflags_allow: (-Wl,-wrap,pthread_create)|(-Wl,-z,now)
-lxd_ld_library_path: "{{ lxd_extracted_tarball_parent_path }}/lxd-{{ lxd_release_version }}/vendor/raft/.libs/:{{ lxd_extracted_tarball_parent_path }}/lxd-{{ lxd_release_version }}/vendor/dqlite/.libs/" # noqa 204
-
+lxd_ld_library_path: "{{ lxd_extracted_tarball_parent_path }}/lxd-{{ lxd_release_version }}/vendor/raft/.libs/:{{ lxd_extracted_tarball_parent_path }}/lxd-{{ lxd_release_version }}/vendor/dqlite/.libs/"  # noqa line-length
 # bridge interface used by LXD to communicate with LXD containers
 lxd_bridge_device_name: lxdbr0
 

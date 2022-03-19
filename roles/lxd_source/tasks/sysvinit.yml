@@ -46,7 +46,7 @@
           #!/bin/sh
           #
           # ANSIBLE MANAGED
-          # 
+          #
           ### BEGIN INIT INFO
           # Provides:          lxd
           # Required-Start:    $local_fs networking

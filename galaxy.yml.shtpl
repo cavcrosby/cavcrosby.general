@@ -8,8 +8,6 @@ authors:
 
 description: A personal collection of reusable Ansible units
 license_file: LICENSE
-dependencies:
-  "community.general": ">=4.1.0"
 
 repository: https://github.com/cavcrosby/cavcrosby.general
 homepage: https://github.com/cavcrosby/cavcrosby.general

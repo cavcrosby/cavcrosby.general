@@ -1,22 +1,22 @@
 ---
 - name: Update apt's package index
   ansible.builtin.apt:
-    update_cache: yes
-  become: yes
+    update_cache: true
+  become: true
 
 - name: Create lxc_source's data directory
   ansible.builtin.file:
     path: "{{ _lxd_data_dir }}"
     state: directory
     mode: "700"
-  become: yes
+  become: true
 
 - name: Create GOPATH's bin directory
   ansible.builtin.file:
     path: "{{ lxd_source_go_path }}/bin"
     state: directory
     mode: "775"
-  become: yes
+  become: true
 
 - name: Append PATH with GOPATH/bin for the ansible user
   ansible.builtin.import_role:
@@ -57,12 +57,12 @@
       - xz-utils
       - ebtables
     state: present
-  become: yes
+  become: true
 
 - name: Install Golang that is specific for LXD
   ansible.builtin.import_role:
     name: golang
-  become: yes
+  become: true
   vars:
     go_version: "{{ lxd_source_go_version }}"
     go_arch: "{{ lxd_source_go_arch }}"
@@ -74,7 +74,7 @@
   ansible.builtin.import_role:
     name: common
     tasks_from: managed_lineinfile
-  become: yes
+  become: true
   vars:
     path: /etc/default/lxc-net
     regexp: '^USE_LXC_BRIDGE=.+'
@@ -84,21 +84,21 @@
 - name: Register the LXC bridge file inode
   ansible.builtin.stat:
     path: /sys/class/net/{{ _default_lxc_bridge }}
-  become: yes
+  become: true
   register: default_lxc_bridge_inode
 
 - name: Remove default LXC bridge
   ansible.builtin.shell: |
     ip link set {{ _default_lxc_bridge }} down
     ip link delete {{ _default_lxc_bridge }} type bridge
-  become: yes
+  become: true
   when: default_lxc_bridge_inode.stat.exists
 
 # When installing a new version of LXD, the wrapper must be used to get the
 # current LXD's LD_LIBRARY_PATH.
 - name: Get the running LXD version
   ansible.builtin.command: lxd --version
-  become: yes
+  become: true
   register: running_lxd_version
   failed_when: "'error while loading shared libraries:' in running_lxd_version.stderr"
   changed_when: false
@@ -109,7 +109,7 @@
   ansible.builtin.shell: |
     find "{{ lxd_source_go_path }}/bin" \( -name 'lxd' \) \
       -and \( -type f \)
-  become: yes
+  become: true
   register: lxd_check
   changed_when: lxd_check.stdout | length == 0
                 or lxd_src_path | length != 0
@@ -129,7 +129,7 @@
       # ANSIBLE MANAGED
       Defaults  secure_path=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:{{ lxd_source_go_path }}/bin
     mode: "440"
-  become: yes
+  become: true
 
 - name: Create wrapper for LXD
   ansible.builtin.copy:
@@ -155,7 +155,7 @@
       fi
 
       {{ lxd_source_go_path }}/bin/lxd "$@"
-  become: yes
+  become: true
 
 - name: Create subuid && subgid files
   ansible.builtin.copy:
@@ -165,7 +165,7 @@
       # ANSIBLE MANAGED
       root:100000:65536
       {{ ansible_user }}:100000:65536
-  become: yes
+  become: true
   loop:
     - /etc/subuid
     - /etc/subgid
@@ -174,14 +174,14 @@
   ansible.builtin.group:
     name: "{{ lxd_access_group }}"
     state: present
-  become: yes
+  become: true
 
 - name: Add ansible_user to the lxd_access_group
   ansible.builtin.user:
-    append: yes
+    append: true
     groups: "{{ lxd_access_group }}"
     name: "{{ ansible_user }}"
-  become: yes
+  become: true
 
 # MONITOR(cavcrosby): ideally this should only run when the ansible user is added
 # to the group that is allowed to interact with LXD. That said, running this
@@ -203,7 +203,7 @@
 - name: Examine the init (PID 1) executable
   ansible.builtin.stat:
     path: /proc/1/exe
-  become: yes
+  become: true
   register: init_pid_exe_inode
 
 - name: Import tasks related to the Systemd LXD setup
@@ -217,9 +217,9 @@
 - name: Enable the LXD service
   ansible.builtin.service:
     name: lxd
-    enabled: yes
+    enabled: true
     state: started
-  become: yes
+  become: true
   notify:
     - Save the current iptables rules
 
@@ -236,14 +236,14 @@
     dest: "{{ _lxd_remote_preseed_path }}"
     mode: "644"
     content: "{{ lxd_preseed }}"
-  become: yes
+  become: true
   register: create_lxd_preseed_check
   changed_when: create_lxd_preseed_check.state == "absent"
 
 - name: Get the LXD's preseed file inode
   ansible.builtin.stat:
     path: "{{ _lxd_remote_preseed_path }}"
-  become: yes
+  become: true
   register: lxd_preseed_inode
 
 # For reference on the shell command (it was either this, truncate, or dd):
@@ -256,14 +256,14 @@
     cmd: |
       set -o pipefail
       lxd init --dump | perl -pi -e 'chomp if eof' > "{{ _running_lxd_remote_preseed_path }}"
-  become: yes
+  become: true
   register: create_running_lxd_preseed_check
   changed_when: create_running_lxd_preseed_check.rc != 0
 
 - name: Get the running LXD's preseed file inode
   ansible.builtin.stat:
     path: "{{ _running_lxd_remote_preseed_path }}"
-  become: yes
+  become: true
   register: running_lxd_preseed_inode
 
 # LXD can be initialize 'n' number of times, meaning there is currently no
@@ -272,14 +272,14 @@
 - name: Initialize LXD
   ansible.builtin.shell: |
     lxd init --preseed < "{{ _lxd_remote_preseed_path }}"
-  become: yes
+  become: true
   changed_when:
     - lxd_preseed_inode.stat.checksum != running_lxd_preseed_inode.stat.checksum
 
 - name: Set the trust password for LXD
   ansible.builtin.shell: |
     lxc config set core.trust_password '{{ lxd_trust_password }}'
-  become: yes
+  become: true
   register: set_trust_password_check
   no_log: true
   changed_when: set_trust_password_check.rc != 0

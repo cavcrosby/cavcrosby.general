@@ -6,7 +6,7 @@
     owner: "{{ jenkins_system_user }}"
     group: "{{ jenkins_system_user }}"
     mode: "700"
-  become: yes
+  become: true
 
 - name: Create jenkins user's java share directory
   ansible.builtin.file:
@@ -15,7 +15,7 @@
     owner: "{{ jenkins_system_user }}"
     group: "{{ jenkins_system_user }}"
     mode: "755"
-  become: yes
+  become: true
 
 # this is to store definitions for user services
 - name: Create jenkins user's systemd units directory
@@ -25,7 +25,7 @@
     owner: "{{ jenkins_system_user }}"
     group: "{{ jenkins_system_user }}"
     mode: "755"
-  become: yes
+  become: true
 
 # This list is specific to Debian/Devuan at the moment. Can be expanded to a
 # vars directory to install dependencies based on the distro.
@@ -34,7 +34,7 @@
     name:
       - openjdk-11-jre-headless
     state: present
-  become: yes
+  become: true
 
 - name: Create the agentopts configuration file
   ansible.builtin.copy:
@@ -50,7 +50,7 @@
       {{ jenkins_username }}:{{ jenkins_password }}
       -workDir
       {{ jenkins_workingdir }}
-  become: yes
+  become: true
 
 - name: Download the agent_executable from the Jenkins instance
   ansible.builtin.get_url:
@@ -59,7 +59,7 @@
     checksum: "sha256:{{ _agent_executable_sha256_checksum }}"
     owner: "{{ jenkins_system_user }}"
     group: "{{ jenkins_system_user }}"
-  become: yes
+  become: true
 
 # Enabling lingering is needed as otherwise once the user's systemd process (e.g.
 # systemd --user) exits, any user services also exit. For reference:
@@ -67,7 +67,7 @@
 - name: Enable lingering for the jenkins_system_user
   ansible.builtin.command: loginctl enable-linger {{ jenkins_system_user }}
   changed_when: false
-  become: yes
+  become: true
 
 - name: Create a jenkins-agent service unit file
   ansible.builtin.copy:
@@ -89,7 +89,7 @@
 
       [Install]
       WantedBy=default.target
-  become: yes
+  become: true
   notify:
     - Reload the systemd daemon for the jenkins_system_user's user services
 
@@ -99,8 +99,8 @@
 - name: Enable the jenkins-agent service
   ansible.builtin.systemd:
     name: jenkins-agent
-    enabled: yes
+    enabled: true
     state: started
     scope: user
-  become: yes
+  become: true
   become_user: "{{ jenkins_system_user }}"

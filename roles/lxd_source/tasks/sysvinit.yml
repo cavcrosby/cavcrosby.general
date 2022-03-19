@@ -6,7 +6,7 @@
     name:
       - lsb-base
     state: present
-  become: yes
+  become: true
 
 # This list is specific to Debian/Devuan at the moment. The 'start-stop-daemon'
 # binary is specific to the dpkg package. The 'init-functions' file (from
@@ -25,7 +25,7 @@
           # By default, the LXD daemon will be detached to the background by the init
           # script. Set this variable to '0' if the daemon should remain in the foreground.
           DETACH=1
-      become: yes
+      become: true
 
     # This init script is specific to Debian/Devuan at the moment. Debian also has
     # guidance for the usage and creation of init scripts, for reference:
@@ -92,7 +92,7 @@
           esac
 
           exit 0
-      become: yes
+      become: true
       notify:
         - Stop the LXD service
   vars:

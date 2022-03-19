@@ -1,7 +1,7 @@
 ---
 - name: Reload the systemd daemon for the jenkins_system_user's user services
   ansible.builtin.systemd:
-    daemon_reload: yes
+    daemon_reload: true
     scope: user
-  become: yes
+  become: true
   become_user: "{{ jenkins_system_user }}"

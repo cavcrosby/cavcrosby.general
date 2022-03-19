@@ -3,4 +3,4 @@
   community.general.iptables_state:
     path: "{{ iptables_up_path }}"
     state: saved
-  become: yes
+  become: true

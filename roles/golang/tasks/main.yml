@@ -26,7 +26,7 @@
   ansible.builtin.unarchive:
     src: "{{ _go_download_path }}"
     dest: "{{ go_extracted_tarball_parent_path }}"
-    remote_src: yes
+    remote_src: true
     extra_opts:
       - --no-same-owner
       - --transform

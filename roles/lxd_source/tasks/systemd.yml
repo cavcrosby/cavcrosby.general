@@ -19,7 +19,7 @@
 
       [Install]
       WantedBy=multi-user.target
-  become: yes
+  become: true
   notify:
     - Reload the systemd daemon
     - Stop the LXD service

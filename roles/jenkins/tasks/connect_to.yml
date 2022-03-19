@@ -59,6 +59,7 @@
     checksum: "sha256:{{ _agent_executable_sha256_checksum }}"
     owner: "{{ jenkins_system_user }}"
     group: "{{ jenkins_system_user }}"
+    mode: "644"
   become: true
 
 # Enabling lingering is needed as otherwise once the user's systemd process (e.g.

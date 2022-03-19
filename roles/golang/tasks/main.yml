@@ -19,6 +19,7 @@
     url: "https://dl.google.com/go/{{ _go_tarball }}"
     dest: "{{ _go_download_path }}"
     checksum: "sha256:{{ go_sha256_checksum }}"
+    mode: "644"
   when:
     - check_go_version.stdout != ("go" + go_version)
 

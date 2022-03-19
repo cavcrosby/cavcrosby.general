@@ -93,6 +93,6 @@ _default_lxc_bridge: lxcbr0
 # serve as the prefix in said tarball name.
 _lxd_extracted_dir: lxd-{{ lxd_release_version }}
 
-_lxd_data_dir: /tmp/ansible/lxd_source
+_lxd_data_dir: /tmp/ansible_roles/lxd_source
 _lxd_remote_preseed_path: "{{ _lxd_data_dir }}/lxd.yaml"
 _running_lxd_remote_preseed_path: "{{ _lxd_data_dir }}/running_lxd.yaml"

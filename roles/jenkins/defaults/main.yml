@@ -35,7 +35,4 @@ _agentopts_config_file_path: "{{ _jenkins_config_dir }}/{{ agentopts_config_file
 _jenkins_system_user_jars_path: "{{ jenkins_system_user_home }}/.local/share/java"
 _jenkins_system_user_systemd_units_path: "{{ jenkins_system_user_home }}/.config/systemd/user"
 
-# DISCUSS(cavcrosby): should I use a different directory name besides "ansible"? This
-# might get confusing when determining if this contains data related to Ansible
-# itself or other parts of it (e.g. role specific data).
-_jenkins_config_dir: "{{ jenkins_system_user_home }}/.config/ansible/jenkins"
+_jenkins_config_dir: "{{ jenkins_system_user_home }}/.config/ansible_roles/jenkins"

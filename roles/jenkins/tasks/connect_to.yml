@@ -1,4 +1,10 @@
 ---
+- name: Update apt's package index
+  ansible.builtin.apt:
+    update_cache: true
+  become: true
+  when: ansible_os_family | lower == "debian"
+
 - name: Create jenkins role's config directory
   ansible.builtin.file:
     path: "{{ _jenkins_config_dir }}"

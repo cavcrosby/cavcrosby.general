@@ -3,6 +3,7 @@
   ansible.builtin.apt:
     update_cache: true
   become: true
+  when: ansible_os_family | lower == "debian"
 
 - name: Create lxc_source's data directory
   ansible.builtin.file:
@@ -28,8 +29,6 @@
     line: 'export PATH="${PATH}:{{ lxd_source_go_path }}/bin"'
     line_identifier: PATH that includes with GOPATH/bin
 
-# This list is specific to Debian 11 at the moment. Can be expanded to a vars
-# directory to install dependencies based on the distro.
 - name: Install the LXD dependencies
   ansible.builtin.apt:
     name:
@@ -58,6 +57,8 @@
       - ebtables
     state: present
   become: true
+  when: ansible_distribution | lower == "debian"
+        or ansible_distribution | lower == "devuan"
 
 - name: Install Golang that is specific for LXD
   ansible.builtin.import_role:

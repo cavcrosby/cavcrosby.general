@@ -1,16 +1,12 @@
 ---
-# This list is specific to Debian/Devuan at the moment. Can be expanded to a
-# vars directory to install dependencies based on the distro.
 - name: Install the SysVinit dependencies
   ansible.builtin.apt:
     name:
       - lsb-base
     state: present
   become: true
+  when: ansible_os_family | lower == "debian"
 
-# This list is specific to Debian/Devuan at the moment. The 'start-stop-daemon'
-# binary is specific to the dpkg package. The 'init-functions' file (from
-# lsb-base) may also be Debian specific.
 - name: Setup the SysVinit environment
   block:
     - name: Create the environment variables file for the LXD init script
@@ -27,8 +23,8 @@
           DETACH=1
       become: true
 
-    # This init script is specific to Debian/Devuan at the moment. Debian also has
-    # guidance for the usage and creation of init scripts, for reference:
+    # Debian provides guidance for the usage and creation of init scripts. For
+    # reference:
     # https://www.debian.org/doc/debian-policy/ch-opersys.html#starting-system-services
     #
     # Inspired by the cron/rsync init scripts.
@@ -97,6 +93,9 @@
         - Stop the LXD service
   vars:
     lxd_initscript_vars_path: /etc/default/lxd
+  # Specific to Debian distros as the 'start-stop-daemon' binary is part of the
+  # 'dpkg' package.
+  when: ansible_os_family | lower == "debian"
 
 - name: Flush the LXD service handlers
   ansible.builtin.meta: flush_handlers

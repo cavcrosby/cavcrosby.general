@@ -27,14 +27,13 @@
     mode: "755"
   become: true
 
-# This list is specific to Debian/Devuan at the moment. Can be expanded to a
-# vars directory to install dependencies based on the distro.
 - name: Install system dependencies
   ansible.builtin.apt:
     name:
       - openjdk-11-jre-headless
     state: present
   become: true
+  when: ansible_os_family | lower == "debian"
 
 - name: Create the agentopts configuration file
   ansible.builtin.copy:

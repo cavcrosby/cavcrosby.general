@@ -39,7 +39,10 @@
       JENKINS_GITHUB_CREDENTIAL_ID: "{{ jenkins_github_credential_id }}"
       JENKINS_GITHUB_CREDENTIAL_USERNAME: "{{ jenkins_github_credential_username }}"
       JENKINS_GITHUB_CREDENTIAL_SECRET: "{{ jenkins_github_credential_secret }}"
-  no_log: "{{ lookup('env','ANSIBLE_JBC_LOG_SECRETS') or true }}"
+  # Even if ANSIBLE_JBC_LOG_SECRETS contains false, it still returned the 'true'
+  # case of false. Which means it would log secrets. Appending the bool filter
+  # seems to fix this.
+  no_log: "{{ lookup('env','ANSIBLE_JBC_LOG_SECRETS') | bool | ternary(false, true, true) }}"
   when: image_to_deploy == "base"
 
 - name: Deploy a jenkins-torkel container
@@ -71,5 +74,5 @@
       JENKINS_AGENT_DESC1: "{{ jenkins_agent_desc1 }}"
       JENKINS_AGENT_NUM_EXECUTORS1: "{{ jenkins_agent_num_executors1 }}"
       JENKINS_AGENT_REMOTE_ROOT_DIR1: "{{ jenkins_agent_remote_root_dir1 }}"
-  no_log: "{{ lookup('env','ANSIBLE_JBC_LOG_SECRETS') or true }}"
+  no_log: "{{ lookup('env','ANSIBLE_JBC_LOG_SECRETS') | bool | ternary(false, true, true) }}"
   when: image_to_deploy == "torkel"

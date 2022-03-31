@@ -1,5 +1,5 @@
 ---
-- name: Install the SysVinit dependencies
+- name: Install the SysVinit dependencies (debian-like)
   ansible.builtin.apt:
     name:
       - lsb-base
@@ -34,7 +34,7 @@
     # used) would start the LXD daemon but shortly after starting, the daemon would
     # "crash". The daemon did not report anything to be of an issue, and starting the
     # daemon manually afterwards would work (e.g. continue running and not crashing).
-    - name: Create a LXD init script
+    - name: Create a LXD init script (debian-like)
       ansible.builtin.copy:
         dest: /etc/init.d/lxd
         mode: "755"

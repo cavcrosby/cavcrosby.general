@@ -61,7 +61,7 @@
   ansible.builtin.get_url:
     url: "{{ jenkins_main_node_url }}/jnlpJars/{{ _agent_executable }}"
     dest: "{{ _agent_executable_download_path }}"
-    checksum: "sha256:{{ _agent_executable_sha256_checksum }}"
+    checksum: "sha256:{{ jenkins_agent_executable_sha256_checksum }}"
     owner: "{{ jenkins_system_user }}"
     group: "{{ jenkins_system_user }}"
     mode: "644"

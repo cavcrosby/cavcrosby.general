@@ -12,6 +12,9 @@ jenkins_system_user_password: $6$1234$FK.dnaw1F49Lsr/7W0A8miXkoXxVzDEHBepDZA3kR8
 # credentials by looking at the resulting process).
 agentopts_config_file: agentopts.cfg
 
+# checksum of the _agent_executable
+jenkins_agent_executable_sha256_checksum: ""
+
 # the Jenkins instance url
 jenkins_main_node_url: http://127.0.0.1:8080
 
@@ -26,7 +29,6 @@ jenkins_password: Passw0rd!
 jenkins_workingdir: /var/lib/jenkins-agent/node1
 
 _agent_executable: agent.jar
-_agent_executable_sha256_checksum: ddd7f394601878fb47c9b3a089cdf4a57895050bde386809057028063279cfad
 _agent_executable_download_path: "{{ _jenkins_system_user_jars_path }}/{{ _agent_executable }}"
 _agentopts_config_file_path: "{{ _jenkins_config_dir }}/{{ agentopts_config_file }}"
 

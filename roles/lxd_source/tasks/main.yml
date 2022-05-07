@@ -224,9 +224,6 @@
   notify:
     - Save the current iptables rules
 
-# MONITOR(cavcrosby): it was found that the LXD unix socket file would sometimes
-# not exist by the time certain tasks were ran, causing them to fail/behave
-# inappropriately. Time will tell if this task fixes the issue.
 - name: Wait until the LXD socket is present before continuing
   ansible.builtin.wait_for:
     path: /var/lib/lxd/unix.socket

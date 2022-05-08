@@ -1,6 +1,6 @@
 include base.mk
 
-# recursive variables
+# recursively expanded variables
 
 # targets
 COLLECTION = collection

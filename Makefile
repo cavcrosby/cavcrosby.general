@@ -28,12 +28,9 @@ ANSISRC = $(shell find . \
 )
 
 # executables
-ANSIBLE_GALAXY = ansible-galaxy
-ANSIBLE_PLAYBOOK = ansible-playbook
-ANSIBLE_VAULT = ansible-vault
-ENVSUBST = envsubst
 executables = \
-	${base_executables}
+	${base_executables}\
+	${ansible_executables}
 
 # simply expanded variables
 _check_executables := $(foreach exec,${executables},$(if $(shell command -v ${exec}),pass,$(error "No ${exec} in PATH")))

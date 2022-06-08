@@ -62,7 +62,6 @@ ${INSTALL}: ${COLLECTION}
 ${COLLECTION}: ${GALAXY_YML}
 >	${ANSIBLE_GALAXY} collection build --force
 
-.PHONY: ${GALAXY_YML}
 ${GALAXY_YML}: ${GALAXY_YML}.shtpl
 >	${ENVSUBST} '$${COLLECTION_VERSION}' < "$<" > "$@"
 

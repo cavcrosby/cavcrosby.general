@@ -46,7 +46,7 @@ ${HELP}:
 >	@echo '  ${COLLECTION}          - build the collection'
 >	@echo '  ${GALAXY_YML}          - generate the collection metadata'
 >	@echo '  ${PUBLISH}             - publish a collection build'
->	@echo '  ${ANSIBLE_LINT}            - lints the Ansible configuration code (yml)'
+>	@echo '  ${ANSIBLE_LINT}        - lints the Ansible configuration code (yml)'
 >	@echo '  ${CLEAN}               - removes files generated from other targets'
 >	@echo 'Common make configurations (e.g. make [config]=1 [targets]):'
 >	@echo '  ANSIBLE_GALAXY_TOKEN       - represents the Ansible Galaxy API key'

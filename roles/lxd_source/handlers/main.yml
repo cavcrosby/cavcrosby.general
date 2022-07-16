@@ -29,11 +29,6 @@
     - LD_LIBRARY_PATH: "{{ lxd_ld_library_path }}"
     - GOPATH: "{{ lxd_source_go_path }}"
 
-- name: Reload the systemd daemon
-  ansible.builtin.systemd:
-    daemon_reload: true
-  become: true
-
 - name: Stop the LXD service
   ansible.builtin.service:
     name: lxd

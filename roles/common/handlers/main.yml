@@ -4,3 +4,8 @@
     path: "{{ iptables_up_path }}"
     state: saved
   become: true
+
+- name: Reload the systemd daemon
+  ansible.builtin.systemd:
+    daemon_reload: true
+  become: true

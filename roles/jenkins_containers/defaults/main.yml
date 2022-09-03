@@ -1,26 +1,26 @@
 ---
-image_to_deploy: base
+image_to_deploy: torkel
 image_tag: v1.0.0
 create_container_network: true
 
-# other vars that mimic the setup of docker compose
+# generic vars that mimic the setup of docker compose
 container_name: jenkins
 container_cpus: 1.0
 container_memory: 1G
 container_volume: jenkins_home:/var/jenkins_home
+jenkins_port_mapping: 8080:8080
+jenkins_agents_port_mapping: 50000:50000
 
 # The bridge name cannot be too long else the Docker daemon will have issues
 # trying to use the name (or a numerical result out of range error). For
 # reference:
 # https://stackoverflow.com/questions/53449304/what-can-be-the-max-length-of-a-docker-compose-network-name
-container_network: jbc1
-container_bridge_ipv4_addr: 192.168.147.1
+container_network: jc1
 container_bridge_ipv4_subnet: 192.168.147.0/24
+container_bridge_ipv4_addr: 192.168.147.1
 container_ipv4_address: 192.168.147.2
-jenkins_port_mapping: 8080:8080
-jenkins_agents_port_mapping: 50000:50000
 
-# env variables expected by this type of Jenkins instance
+# env vars to be injected into the container
 jenkins_url: 127.0.0.1:8080
 jenkins_admin_id: cavcrosby
 jenkins_admin_password: Passw0rd!
@@ -31,8 +31,4 @@ smtp_server_addr: smtp.gmail.com
 jenkins_github_credential_id: cavcrosby-github
 jenkins_github_credential_username: cavcrosby
 jenkins_github_credential_secret: ""
-jenkins_main_num_executors: "0"
-jenkins_agent_name1: agent1
-jenkins_agent_desc1: agent1's description
-jenkins_agent_num_executors1: "2"
-jenkins_agent_remote_root_dir1: /var/lib/jenkins-agent/node1
+jenkins_controller_num_executors: "0"

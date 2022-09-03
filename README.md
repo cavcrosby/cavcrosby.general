@@ -9,5 +9,5 @@ Documentation for the collection.
 - `cavcrosby.general.common`: Contains common units used throughout my projects.
 - `cavcrosby.general.lxd_source`: Installs LXD from source.
 - `cavcrosby.general.golang`: Installs golang (Go) on the running system.
-- `cavcrosby.general.jenkins_base_containers`: Used to instantiate Jenkins containers that derive from the jenkins-base container.
+- `cavcrosby.general.jenkins_containers`: Used to instantiate my personal Jenkins containers.
 - `cavcrosby.general.jenkins`: Contains common units used to manage my Jenkins environments.

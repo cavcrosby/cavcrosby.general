@@ -1,7 +1,7 @@
 galaxy_info:
-  role_name: jenkins_base_containers
+  role_name: jenkins_containers
   author: Conner Crosby
-  description: Used to instantiate Jenkins containers that derive from the jenkins-base container
+  description: Used to instantiate my personal Jenkins containers
   license: BSD-3-Clause
   min_ansible_version: 2.12.3
 

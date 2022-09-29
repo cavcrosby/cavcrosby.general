@@ -1,6 +1,7 @@
 include base.mk
 
 # recursively expanded variables
+POETRY_PYTHON_CONSTRAINT = ~3.10
 
 # targets
 COLLECTION = collection
@@ -13,10 +14,8 @@ ANSIBLE_GALAXY_TOKEN =
 
 # include other generic makefiles
 include python.mk
-# overrides defaults set by included makefiles
-VIRTUALENV_PYTHON_VERSION = 3.9.5
-
 include ansible.mk
+# overrides defaults set by included makefiles
 ANSIBLE_SRC = $(shell find . \
 	\( \
 		\( -type f \) \

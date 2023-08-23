@@ -1,38 +1,43 @@
-include base.mk
+# special makefile variables
+.DEFAULT_GOAL := help
+.RECIPEPREFIX := >
 
 # recursively expanded variables
-POETRY_PYTHON_CONSTRAINT = >=3.10
+SHELL = /usr/bin/sh
 
 # targets
+HELP = help
+SETUP = setup
+INSTALL = install
 COLLECTION = collection
 GALAXY_YML = galaxy.yml
 COLLECTION_META = collection-meta
 PUBLISH = publish
+CLEAN = clean
 
 # to be passed in at make runtime
 ANSIBLE_GALAXY_TOKEN =
 
-# include other generic makefiles
-include python.mk
-include ansible.mk
-# overrides defaults set by included makefiles
-ANSIBLE_SRC = $(shell find . \
-	\( \
-		\( -type f \) \
-		-or \( -name '*.yml' \) \
-	\) \
-	-and ! \( -name 'galaxy.yml' \) \
-	-and ! \( -name '.python-version' \) \
-	-and ! \( -path '*.git*' \) \
-)
-
 # executables
+GIT = git
+ENVSUBST = envsubst
+ANSIBLE_GALAXY = ansible-galaxy
+ANSIBLE_LINT = ansible-lint
+PYTHON = python
+PIP = pip
 executables = \
-	${base_executables}\
-	${ansible_executables}
+	${PYTHON}\
+	${ANSIBLE_GALAXY}\
+	${ANSIBLE_LINT}
 
 # simply expanded variables
 _check_executables := $(foreach exec,${executables},$(if $(shell command -v ${exec}),pass,$(error "No ${exec} in PATH")))
+ansible_src_paths := $(shell find . \( -type f \) \
+	-and \( -name '*.yml' \) \
+	-and ! \( -name 'galaxy.yml' \) \
+	-and ! \( -name 'galaxy.yml.shtpl' \) \
+)
+
 export COLLECTION_VERSION := $(shell ${GIT} describe --tags --abbrev=0 | sed 's/v//')
 
 .PHONY: ${HELP}
@@ -51,7 +56,9 @@ ${HELP}:
 >	@echo '  ANSIBLE_GALAXY_TOKEN       - represents the Ansible Galaxy API key'
 
 .PHONY: ${SETUP}
-${SETUP}: ${PYENV_REQUIREMENTS_SETUP}
+${SETUP}:
+>	${PYTHON} -m ${PIP} install --upgrade "${PIP}"
+>	${PYTHON} -m ${PIP} install --requirement "./requirements.txt"
 
 .PHONY: ${INSTALL}
 ${INSTALL}: ${COLLECTION}
@@ -68,6 +75,15 @@ ${GALAXY_YML}: ${GALAXY_YML}.shtpl
 ${PUBLISH}:
 >	@[ -n "${ANSIBLE_GALAXY_TOKEN}" ] || { echo "make: ANSIBLE_GALAXY_TOKEN was not passed into make"; exit 1; }
 >	${ANSIBLE_GALAXY} collection publish ./cavcrosby-general-*.tar.gz --token "${ANSIBLE_GALAXY_TOKEN}"
+
+.PHONY: ${ANSIBLE_LINT}
+${ANSIBLE_LINT}:
+>	@for ansible_src_path in ${ansible_src_paths}; do \
+		if echo "$${ansible_src_path}" | grep --quiet "-"; then \
+			echo "make: $${ansible_src_path} should not contain a dash in the filename"; \
+		fi \
+	done
+>	${ANSIBLE_LINT}
 
 .PHONY: ${CLEAN}
 ${CLEAN}:

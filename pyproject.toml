@@ -1,0 +1,12 @@
+[project]
+name = "cavcrosby.general"
+version = "1.0.0"
+description = "A personal collection of reusable Ansible units"
+requires-python = ">=3.10,<3.11"
+
+[[authors]]
+name = "Conner Crosby"
+email = "conner@cavcrosby.tech"
+
+[license]
+file = "./LICENSE"

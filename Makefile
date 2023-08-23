@@ -58,7 +58,9 @@ ${HELP}:
 .PHONY: ${SETUP}
 ${SETUP}:
 >	${PYTHON} -m ${PIP} install --upgrade "${PIP}"
->	${PYTHON} -m ${PIP} install --requirement "./requirements.txt"
+>	${PYTHON} -m ${PIP} install \
+		--requirement "./requirements.txt" \
+		--requirement "./dev-requirements.txt"
 
 .PHONY: ${INSTALL}
 ${INSTALL}: ${COLLECTION}

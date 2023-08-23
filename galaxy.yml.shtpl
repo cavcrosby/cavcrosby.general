@@ -18,4 +18,5 @@ build_ignore:
   - ".gitignore"
   - "Makefile"
   - "requirements.txt"
+  - "dev-requirements.txt"
   - "galaxy.yml.shtpl"

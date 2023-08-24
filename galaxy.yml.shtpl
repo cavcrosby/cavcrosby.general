@@ -14,9 +14,12 @@ homepage: https://github.com/cavcrosby/cavcrosby.general
 issues: https://github.com/cavcrosby/cavcrosby.general/issues
 
 build_ignore:
-  - ".python-version"
-  - ".gitignore"
-  - "Makefile"
-  - "requirements.txt"
-  - "dev-requirements.txt"
-  - "galaxy.yml.shtpl"
+  - .python-version
+  - .gitignore
+  - Makefile
+  - requirements.txt
+  - dev-requirements.txt
+  - galaxy.yml.shtpl
+  - galaxy.yml
+  - renovate.json
+  - pyproject.toml

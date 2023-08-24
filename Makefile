@@ -11,8 +11,8 @@ SETUP = setup
 INSTALL = install
 COLLECTION = collection
 GALAXY_YML = galaxy.yml
-COLLECTION_META = collection-meta
 PUBLISH = publish
+LINT = lint
 CLEAN = clean
 
 # to be passed in at make runtime
@@ -50,7 +50,7 @@ ${HELP}:
 >	@echo '  ${COLLECTION}          - build the collection'
 >	@echo '  ${GALAXY_YML}          - generate the collection metadata'
 >	@echo '  ${PUBLISH}             - publish a collection build'
->	@echo '  ${ANSIBLE_LINT}        - lints the Ansible configuration code (yml)'
+>	@echo '  ${LINT}                - lints the Ansible configuration code (yml)'
 >	@echo '  ${CLEAN}               - removes files generated from other targets'
 >	@echo 'Common make configurations (e.g. make [config]=1 [targets]):'
 >	@echo '  ANSIBLE_GALAXY_TOKEN       - represents the Ansible Galaxy API key'
@@ -75,11 +75,15 @@ ${GALAXY_YML}: ${GALAXY_YML}.shtpl
 
 .PHONY: ${PUBLISH}
 ${PUBLISH}:
->	@[ -n "${ANSIBLE_GALAXY_TOKEN}" ] || { echo "make: ANSIBLE_GALAXY_TOKEN was not passed into make"; exit 1; }
->	${ANSIBLE_GALAXY} collection publish ./cavcrosby-general-*.tar.gz --token "${ANSIBLE_GALAXY_TOKEN}"
+>	@[ -n "${ANSIBLE_GALAXY_TOKEN}" ] || \
+		{ echo "make: ANSIBLE_GALAXY_TOKEN was not passed into make"; exit 1; }
 
-.PHONY: ${ANSIBLE_LINT}
-${ANSIBLE_LINT}:
+>	${ANSIBLE_GALAXY} collection publish \
+		--token "${ANSIBLE_GALAXY_TOKEN}" \
+		./cavcrosby-general-*.tar.gz
+
+.PHONY: ${LINT}
+${LINT}:
 >	@for ansible_src_path in ${ansible_src_paths}; do \
 		if echo "$${ansible_src_path}" | grep --quiet "-"; then \
 			echo "make: $${ansible_src_path} should not contain a dash in the filename"; \

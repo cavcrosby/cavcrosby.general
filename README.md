@@ -6,7 +6,7 @@ Documentation for the collection.
 
 ### Roles
 
-- `cavcrosby.general.lxd_source`: Installs LXD from source.
-- `cavcrosby.general.golang`: Installs golang (Go) on the running system.
-- `cavcrosby.general.jenkins_containers`: Used to instantiate my personal Jenkins containers.
-- `cavcrosby.general.jenkins`: Contains common units used to manage my Jenkins environments.
+- `cavcrosby.general.lxd_source` (not maintained): Installs LXD from source.
+- `cavcrosby.general.golang` (not maintained): Installs golang (Go) on the running system.
+- `cavcrosby.general.jenkins_containers` (not maintained): Used to instantiate my personal Jenkins containers.
+- `cavcrosby.general.jenkins` (not maintained): Contains common units used to manage my Jenkins environments.

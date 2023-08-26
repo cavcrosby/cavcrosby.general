@@ -1,3 +1,0 @@
----
-# used by the deb package 'iptables-persistent'
-iptables_up_path: /etc/iptables/rules.v4

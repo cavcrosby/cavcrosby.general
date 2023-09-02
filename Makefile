@@ -13,6 +13,7 @@ COLLECTION = collection
 GALAXY_YML = galaxy.yml
 PUBLISH = publish
 LINT = lint
+TEST = test
 CLEAN = clean
 
 # to be passed in at make runtime
@@ -25,6 +26,7 @@ ANSIBLE_GALAXY = ansible-galaxy
 ANSIBLE_LINT = ansible-lint
 PYTHON = python
 PIP = pip
+MOLECULE = molecule
 executables = \
 	${PYTHON}\
 	${ANSIBLE_GALAXY}\
@@ -51,6 +53,7 @@ ${HELP}:
 >	@echo '  ${GALAXY_YML}          - generate the collection metadata'
 >	@echo '  ${PUBLISH}             - publish a collection build'
 >	@echo '  ${LINT}                - lints the Ansible configuration code (yml)'
+>	@echo '  ${TEST}                - runs the scenarios for the collection'
 >	@echo '  ${CLEAN}               - removes files generated from other targets'
 >	@echo 'Common make configurations (e.g. make [config]=1 [targets]):'
 >	@echo '  ANSIBLE_GALAXY_TOKEN       - represents the Ansible Galaxy API key'
@@ -90,6 +93,10 @@ ${LINT}:
 		fi \
 	done
 >	${ANSIBLE_LINT}
+
+.PHONY: ${TEST}
+${TEST}:
+>	env --chdir "./extensions" ${MOLECULE} test --all
 
 .PHONY: ${CLEAN}
 ${CLEAN}:

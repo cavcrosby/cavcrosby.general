@@ -1,0 +1,9 @@
+---
+# see https://docs.ansible.com/ansible/latest/collections/ansible/builtin/lineinfile_module.html#parameter-path
+managed_lineinfile_path: ""
+
+# see https://docs.ansible.com/ansible/latest/collections/ansible/builtin/lineinfile_module.html#parameter-regexp
+managed_lineinfile_regexp: ""
+
+# see https://docs.ansible.com/ansible/latest/collections/ansible/builtin/lineinfile_module.html#parameter-line
+managed_lineinfile_line: ""

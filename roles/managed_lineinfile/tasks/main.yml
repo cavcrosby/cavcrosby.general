@@ -1,0 +1,38 @@
+---
+# inspired by:
+# https://stackoverflow.com/questions/29075287/ansible-insert-line-if-not-exists#answer-62609075
+- name: Check if the line is already in the specified file
+  ansible.builtin.lineinfile:
+    state: absent
+    path: "{{ managed_lineinfile_path }}"
+    regexp: "{{ managed_lineinfile_regexp }}"
+  check_mode: true
+  changed_when: false
+  register: line_check
+
+- name: Check if the Ansible managed header already in the specified file
+  ansible.builtin.lineinfile:
+    state: absent
+    path: "{{ managed_lineinfile_path }}"
+    regexp: '^# ANSIBLE MANAGED$'
+  check_mode: true
+  changed_when: false
+  register: ansible_managed_header_check
+  when: line_check.found == 0
+
+- name: Append the specified file with the Ansible managed header
+  ansible.builtin.lineinfile:
+    state: present
+    path: "{{ managed_lineinfile_path }}"
+    regexp: '^# ANSIBLE MANAGED$'
+    line: "\n# ANSIBLE MANAGED"
+  when:
+    - line_check.found == 0
+    - ansible_managed_header_check.found == 0
+
+- name: Append the specified file with the line
+  ansible.builtin.lineinfile:
+    state: present
+    path: "{{ managed_lineinfile_path }}"
+    regexp: "{{ managed_lineinfile_regexp }}"
+    line: "{{ managed_lineinfile_line }}"

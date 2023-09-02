@@ -1,0 +1,11 @@
+galaxy_info:
+  role_name: managed_lineinfile
+  author: Conner Crosby
+  description: Wraps around ansible.builtin.lineinfile, managing lines under a common managed header
+  license: BSD-3-Clause
+  min_ansible_version: 2.15.3
+
+  platforms:
+    - name: Debian
+      versions:
+        - bookworm

@@ -1,0 +1,53 @@
+---
+- name: Verify
+  hosts: all
+
+
+  tasks:
+    - name: Check if the Ansible managed header is in the specified file
+      ansible.builtin.lineinfile:
+        state: absent
+        path: "{{ molecule_test_file_path }}"
+        regexp: '^# ANSIBLE MANAGED$'
+      check_mode: true
+      changed_when: false
+      register: ansible_managed_header_check
+
+    - name: Check if GRUB_CMDLINE_LINUX_DEFAULT set with systemd.unified_cgroup_hierarchy=0
+      ansible.builtin.lineinfile:
+        state: absent
+        path: "{{ molecule_test_file_path }}"
+        regexp: '^GRUB_CMDLINE_LINUX_DEFAULT="\${GRUB_CMDLINE_LINUX_DEFAULT} systemd.unified_cgroup_hierarchy=0"'
+      check_mode: true
+      changed_when: false
+      register: grub_cmdline_line_check
+
+    - name: Check if GRUB_INIT_TUNE set to "480 440 1"
+      ansible.builtin.lineinfile:
+        state: absent
+        path: "{{ molecule_test_file_path }}"
+        regexp: '^GRUB_INIT_TUNE="480 440 1"'
+      check_mode: true
+      changed_when: false
+      register: grub_init_tune_line_check
+
+    - name: Assert that the Ansible managed header is in the specified file and is not duplicated
+      ansible.builtin.assert:
+        that:
+          - ansible_managed_header_check.found == 1
+        fail_msg: lines found => {{ ansible_managed_header_check.found }}
+        success_msg: ok
+
+    - name: Assert that GRUB_CMDLINE_LINUX_DEFAULT set with systemd.unified_cgroup_hierarchy=0 and is not duplicated
+      ansible.builtin.assert:
+        that:
+          - grub_cmdline_line_check.found == 1
+        fail_msg: lines found => {{ grub_cmdline_line_check.found }}
+        success_msg: ok
+
+    - name: Assert that GRUB_INIT_TUNE set to "480 440 1" and is not duplicated
+      ansible.builtin.assert:
+        that:
+          - grub_init_tune_line_check.found == 1
+        fail_msg: lines found => {{ grub_init_tune_line_check.found }}
+        success_msg: ok

@@ -1,0 +1,18 @@
+---
+driver:
+  name: docker
+platforms:
+  - name: instance
+    image: python:3-slim-bookworm
+    pre_build_image: true
+provisioner:
+  name: ansible
+  inventory:
+    group_vars:
+      all:
+        molecule_test_file_path: /tmp/grub
+  playbooks:
+    converge: ../managed_lineinfile_resources/playbooks/converge.yml
+    verify: ../managed_lineinfile_resources/playbooks/verify.yml
+  env:
+    ANSIBLE_ROLES_PATH: ../../../roles:${HOME}/.ansible/roles:/usr/share/ansible/roles:/etc/ansible/roles

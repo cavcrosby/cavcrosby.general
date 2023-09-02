@@ -10,3 +10,4 @@ Documentation for the collection.
 - `cavcrosby.general.golang` (not maintained): Installs golang (Go) on the running system.
 - `cavcrosby.general.jenkins_containers` (not maintained): Used to instantiate my personal Jenkins containers.
 - `cavcrosby.general.jenkins` (not maintained): Contains common units used to manage my Jenkins environments.
+- `cavcrosby.general.managed_lineinfile`: Wraps around `ansible.builtin.lineinfile`, managing lines under a common managed header.
